@@ -1,0 +1,16 @@
+[Unit]
+Description=CloudWatch posting service
+Documentation=https://aws.amazon.com/documentation/cloudwatch/
+After=network-online.target
+
+[Service]
+Restart=on-failure
+# Environment=AWS_ACCESS_KEY_ID=xxx
+# Environment=AWS_SECRET_ACCESS_KEY=xxx
+ExecStart=/usr/bin/cloudwatch-metrics
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=cloudwatch-metrics
+
+[Install]
+WantedBy=multi-user.target

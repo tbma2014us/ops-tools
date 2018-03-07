@@ -1,0 +1,8 @@
+Architecture: all
+Depends: 
+Description: CloudWatch posting service
+Maintainer: Alex Zimin <alex.zimin@gmail.com>
+Package: cloudwatch-metrics
+Priority: optional
+Section: base
+Version: 1.0

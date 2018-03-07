@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+SERVICE_NAME='cloudwatch-metrics'
+if [[ $(systemctl) =~ -\.mount ]]
+then
+  rm -f /lib/systemd/system/${SERVICE_NAME}.service*
+elif [[ -f /etc/init.d/cron && ! -h /etc/init.d/cron ]]
+then
+  rm -f /etc/init.d/${SERVICE_NAME}.conf*
+fi
+rm -f /usr/bin/${SERVICE_NAME}
