@@ -123,14 +123,16 @@ def collect_metrics():
     return data
 
 
-def metrics(_session, verbose=None):
+def metrics(_options):
+    session = boto3.session.Session(
+        profile_name=_options.profile or None, region_name=_options.region)
     data = collect_metrics()
     dimensions = ('InstanceId',
                   requests.get('http://169.254.169.254/latest/meta-data/instance-id').text
                   ),
     for dimension in dimensions:
-        verbose and logging.info('Collected metrics:\n' + pformat(data))
-        submit_metrics(_session, verbose, data, "System/Linux", dimension)
+        _options.verbose and logging.info('Collected metrics:\n' + pformat(data))
+        submit_metrics(session, _options.verbose, data, "System/Linux", dimension)
         logger.info(
             'Submitted %d metrics for dimension System/Linux: %s' % (len(data), dimension[0])
         )
@@ -180,12 +182,10 @@ def main(args=sys.argv[1:]):
 
     logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=options.log_format)
     logging.info('Starting %s' % options.name)
-    session = boto3.session.Session(
-        profile_name=options.profile or None, region_name=options.region)
 
     while 1:
         dt = datetime.datetime.now() + datetime.timedelta(seconds=5 * 60)
-        metrics(session, verbose=options.verbose)
+        metrics(options)
         options.verbose and logging.info('Sleeping until %s' % dt.strftime('%Y-%m-%d %H:%M:%S'))
         while datetime.datetime.now() < dt:
             time.sleep(1)
