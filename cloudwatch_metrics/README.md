@@ -1,7 +1,7 @@
 ## Synopsis
 **cloudwatch-metrics**
 
-Runs as a service on Ubuntu system. Every 5 minutes posts custom metrics into CloudWatch
+Runs as a service on Ubuntu instance. Every 5 minutes posts custom metrics into CloudWatch
 
 ## Make
 
@@ -44,7 +44,7 @@ sudo service cloudwatch-metrics start
 ```
 Start service in systemd
 ```bash
-sudo systemctl stop cloudwatch-metrics.service
+sudo systemctl start cloudwatch-metrics.service
 ```
 
 ## Set to auto-start
