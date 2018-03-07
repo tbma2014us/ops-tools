@@ -30,10 +30,10 @@ sudo dpkg -i build/cloudwatch-metrics.deb
 
 Provide valid AWS CloudWatch credentials using one of the following: 
 1. IAM
-2. ~/.aws/credentials
-3. ~/.aws/config
+2. ~root/.aws/credentials
+3. ~root/.aws/config
 4. /etc/boto.cfg
-5. ~/.boto
+5. ~root/.boto
 6. or AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables
 
 ## Start
