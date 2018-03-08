@@ -1,3 +1,4 @@
+import argparse
 import datetime
 import logging
 import os
@@ -8,10 +9,10 @@ import sys
 import time
 from pprint import pformat
 
-import argparse
 import boto3
+import botocore.client
+import botocore.exceptions
 import requests
-from botocore.exceptions import ClientError
 
 __version__ = '1.0.0'
 logger = logging.getLogger()
@@ -139,6 +140,7 @@ def metrics(_options):
 
 
 def submit_metrics(_session, verbose, data, namespace,  *dimensions):
+    config = botocore.client.Config(connect_timeout=5, read_timeout=5)
     metric_data = list()
     for name, (value, unit, metric_dimensions) in data:
         metric_dimensions = tuple(metric_dimensions)
@@ -160,11 +162,11 @@ def submit_metrics(_session, verbose, data, namespace,  *dimensions):
         )
     verbose and logging.info('Submitting metrics:\n' + pformat(metric_data))
     try:
-        _session.client('cloudwatch').put_metric_data(
+        _session.client('cloudwatch', config=config).put_metric_data(
             Namespace=namespace,
             MetricData=metric_data
         )
-    except ClientError as e:
+    except botocore.exceptions.ClientError as e:
         logging.error(e)
 
 
