@@ -26,8 +26,8 @@ class ArgsParser(argparse.ArgumentParser):
         argparse.ArgumentParser.__init__(self, *args, **kwargs)
         self.formatter_class = argparse.ArgumentDefaultsHelpFormatter
         self.epilog = '''
-            Configure your AWS access using: IAM, ~/.aws/credentials, ~/.aws/config, /etc/boto.cfg,
-             ~/.boto, or AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables
+            Configure your AWS access using: IAM, ~root/.aws/credentials, ~root/.aws/config, /etc/boto.cfg,
+             ~root/.boto, or AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables
             '''
         self.options = None
         self.add_argument('-p', '--profile', dest='profile', help='AWS profile to use')
@@ -128,9 +128,12 @@ def metrics(_options):
     session = boto3.session.Session(
         profile_name=_options.profile or None, region_name=_options.region)
     data = collect_metrics()
-    dimensions = ('InstanceId',
-                  requests.get('http://169.254.169.254/latest/meta-data/instance-id').text
-                  ),
+    try:
+        dimensions = ('InstanceId',
+                      requests.get('http://169.254.169.254/latest/meta-data/instance-id', timeout=3).text
+                      ),
+    except requests.exceptions.ConnectionError:
+        raise SystemExit('Fatal Error: Not running on AWS EC2 instance')
     for dimension in dimensions:
         _options.verbose and logging.info('Collected metrics:\n' + pformat(data))
         submit_metrics(session, _options.verbose, data, "System/Linux", dimension)
