@@ -1,6 +1,6 @@
 [Unit]
 Description=CloudWatch posting service
-Documentation=https://aws.amazon.com/documentation/cloudwatch/
+Documentation=https://github.com/tbma2014us/python-tools/
 After=network-online.target
 
 [Service]
