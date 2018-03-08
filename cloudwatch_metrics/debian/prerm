@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 SERVICE_NAME='cloudwatch-metrics'
 if [[ $(systemctl) =~ -\.mount ]]
 then 
