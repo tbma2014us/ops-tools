@@ -143,7 +143,7 @@ def metrics(_options):
 
 
 def submit_metrics(_session, verbose, data, namespace,  *dimensions):
-    config = botocore.client.Config(connect_timeout=5, read_timeout=5)
+    config = botocore.client.Config(connect_timeout=5, retries={'max_attempts': 0})
     metric_data = list()
     for name, (value, unit, metric_dimensions) in data:
         metric_dimensions = tuple(metric_dimensions)
