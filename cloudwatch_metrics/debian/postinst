@@ -6,5 +6,5 @@ then
   cp ${SERVICE_DIR}.systemd_config /lib/systemd/system/${SERVICE_NAME}.service
 elif [[ $(pidof /sbin/init) ]]
 then 
-  cp ${SERVICE_DIR}.initd_config.sh /etc/init.d/${SERVICE_NAME}.conf
+  cp ${SERVICE_DIR}.initd_config /etc/init.d/${SERVICE_NAME}.conf
 fi
