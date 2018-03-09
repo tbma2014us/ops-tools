@@ -1,10 +1,10 @@
 #!/bin/bash
 SERVICE_NAME='cloudwatch-metrics'
-if [[ $(systemctl) =~ -\.mount ]]
+if [[ $(pidof -s systemd) ]]
 then 
   systemctl disable ${SERVICE_NAME}.service
   systemctl stop ${SERVICE_NAME}.service
-elif [[ -f /etc/init.d/cron && ! -h /etc/init.d/cron ]]
+elif [[ $(pidof /sbin/init) ]]
 then 
   update-rc.d -f ${SERVICE_NAME} remove
   service stop ${SERVICE_NAME}

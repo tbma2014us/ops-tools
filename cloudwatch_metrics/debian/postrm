@@ -1,9 +1,9 @@
 #!/bin/bash
 SERVICE_NAME='cloudwatch-metrics'
-if [[ $(systemctl) =~ -\.mount ]]
+if [[ $(pidof -s systemd) ]]
 then
   rm -f /lib/systemd/system/${SERVICE_NAME}.service*
-elif [[ -f /etc/init.d/cron && ! -h /etc/init.d/cron ]]
+elif [[ $(pidof /sbin/init) ]]
 then
   rm -f /etc/init.d/${SERVICE_NAME}.conf*
 fi

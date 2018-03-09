@@ -1,10 +1,10 @@
 #!/bin/bash
 SERVICE_NAME='cloudwatch-metrics'
 SERVICE_DIR='/var/lib/dpkg/info/cloudwatch-metrics'
-if [[ $(systemctl) =~ -\.mount ]]
+if [[ $(pidof -s systemd) ]]
 then 
   cp ${SERVICE_DIR}.systemd_config /lib/systemd/system/${SERVICE_NAME}.service
-elif [[ -f /etc/init.d/cron && ! -h /etc/init.d/cron ]]
+elif [[ $(pidof /sbin/init) ]]
 then 
   cp ${SERVICE_DIR}.initd_config.sh /etc/init.d/${SERVICE_NAME}.conf
 fi
