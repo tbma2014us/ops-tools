@@ -1,5 +1,5 @@
+*.egg-info
+*.pyc
+.DS_Store
 .idea/
 build/
-.DS_Store
-*.pyc
-*.egg-info
