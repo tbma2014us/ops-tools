@@ -2,9 +2,9 @@
 SERVICE_NAME='cloudwatch-metrics'
 if [[ $(pidof -s systemd) ]]
 then
-  rm -f /lib/systemd/system/${SERVICE_NAME}.service*
+  rm -f /lib/systemd/system/${SERVICE_NAME}.service
 elif [[ $(pidof /sbin/init) ]]
 then
-  rm -f /etc/init.d/${SERVICE_NAME}.conf*
+  rm -f /etc/init.d/${SERVICE_NAME}
 fi
 rm -f /usr/bin/${SERVICE_NAME}
