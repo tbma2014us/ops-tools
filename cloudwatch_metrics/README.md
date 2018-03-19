@@ -79,7 +79,7 @@ sudo systemctl enable cloudwatch-metrics.service
 | OpenFileDescriptorCount  | number of open files |
 
 
-* Typical IAM role for this service:
+* Typical IAM policy for this service:
 ```json
 {
     "Version": "2012-10-17",
