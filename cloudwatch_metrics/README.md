@@ -67,7 +67,7 @@ sudo systemctl enable cloudwatch-metrics.service
 
 ## Notes
 
-Currently collected metrics:
+* Currently collected metrics:
 
 
 | Posted metric  | Comments |
@@ -78,3 +78,22 @@ Currently collected metrics:
 | NetworkConnections  | for TCP and UDP  |
 | OpenFileDescriptorCount  | number of open files |
 
+
+* Typical IAM role for this service:
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "cloudwatch:PutMetricData",
+                "cloudwatch:GetMetricStatistics*",
+                "cloudwatch:ListMetrics*",
+                "ec2:DescribeTags*"
+            ],
+            "Effect": "Allow",
+            "Resource": "*"
+        }
+    ]
+}
+```
