@@ -3,17 +3,12 @@
 
 Runs as a service on Ubuntu instance. Every 5 minutes posts custom metrics into CloudWatch
 
-
-
-| Posted metric  | Comments |
-| ------------- | ------------- |
-| LoadAverage  | load average|
-| MemoryUtilization  | in percent  |
-| DiskSpaceUtilization  | in percent for each MountPath  |
-| NetworkConnections  | for TCP and UDP  |
-| OpenFileDescriptorCount  | number of open files |
-
-
+1. [Make](#Make)
+2. [Install](#Install)
+2. [Configure](#Configure)
+2. [Start](#Start)
+2. [Set to auto-start](#Set to auto-start)
+2. [Notes](#Notes)
 
 ## Make
 
@@ -69,3 +64,17 @@ On a system with systemd
 ```bash
 sudo systemctl enable cloudwatch-metrics.service
 ```
+
+## Notes
+
+Currently collected metrics:
+
+
+| Posted metric  | Comments |
+| ------------- | ------------- |
+| LoadAverage  | load average|
+| MemoryUtilization  | in percent  |
+| DiskSpaceUtilization  | in percent for each MountPath  |
+| NetworkConnections  | for TCP and UDP  |
+| OpenFileDescriptorCount  | number of open files |
+
