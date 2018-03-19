@@ -81,19 +81,6 @@ def collect_metrics():
             inactive = (memfree + buffers + _cached) / float(memtotal)
             yield round(100 * (1 - inactive), 1), "Percent", ()
 
-    # @collect
-    # def memory_available():
-    #     with open('/proc/meminfo') as f:
-    #         def match(line, item):
-    #             meminfo_regex = re.compile(r'([A-Z][A-Za-z()_]+):\s+(\d+)(?: ([km]B))')
-    #             name, amount, unit = meminfo_regex.match(line).groups()
-    #             if name == item:
-    #                 assert unit == 'kB'
-    #                 return int(amount)
-    #         memfree, buffers, _cached = pick(
-    #             f, match, 'MemFree', 'Buffers', 'Cached')
-    #         yield round((memfree + buffers + _cached) / float(1024), 1), "Megabytes", ()
-
     @collect
     def disk_space_utilization():
         with open('/proc/mounts') as f:
