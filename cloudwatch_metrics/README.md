@@ -3,6 +3,18 @@
 
 Runs as a service on Ubuntu instance. Every 5 minutes posts custom metrics into CloudWatch
 
+**Posted metrics:**
+
+| Metric name  | Comments |
+| ------------- | ------------- |
+| LoadAverage  | load average|
+| MemoryUtilization  | in percent  |
+| DiskSpaceUtilization  | in percent for each MounthPath  |
+| NetworkConnections  | for TCP and UDP  |
+| OpenFileDescriptorCount  | number of open files |
+
+
+
 ## Make
 
 Install prerequisites
