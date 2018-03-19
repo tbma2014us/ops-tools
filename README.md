@@ -5,6 +5,6 @@ DevOps tools written in Python
 
 
 ## cloudwatch_metrics
-Service damon for ubuntu servers to post CloudWatch metrics.
+Service daemon for Ubuntu servers to post custom CloudWatch metrics.
 ## watchdog.py
 TCP-port watchdog.
