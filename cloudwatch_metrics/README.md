@@ -3,12 +3,12 @@
 
 Runs as a service on Ubuntu instance. Every 5 minutes posts custom metrics into CloudWatch
 
-1. [Make](#Make)
-2. [Install](#Install)
-2. [Configure](#Configure)
-2. [Start](#Start)
-2. [Set to auto-start](#Set-to-auto-start)
-2. [Notes](#Notes)
+1. [Make](#make)
+2. [Install](#install)
+2. [Configure](#configure)
+2. [Start](#start)
+2. [Set to auto-start](#set-to-auto-start)
+2. [Notes](#notes)
 
 ## Make
 
