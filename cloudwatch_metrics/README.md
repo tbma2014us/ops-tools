@@ -7,7 +7,7 @@ Runs as a service on Ubuntu instance. Every 5 minutes posts custom metrics into 
 2. [Install](#Install)
 2. [Configure](#Configure)
 2. [Start](#Start)
-2. [AutoStart](#Set to auto-start)
+2. [Set to auto-start](#Set-to-auto-start)
 2. [Notes](#Notes)
 
 ## Make
