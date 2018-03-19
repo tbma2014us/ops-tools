@@ -3,9 +3,9 @@
 
 Runs as a service on Ubuntu instance. Every 5 minutes posts custom metrics into CloudWatch
 
-**Posted metrics:**
 
-| Metric name  | Comments |
+
+| Posted metric  | Comments |
 | ------------- | ------------- |
 | LoadAverage  | load average|
 | MemoryUtilization  | in percent  |
