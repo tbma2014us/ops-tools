@@ -5,10 +5,10 @@ Runs as a service on Ubuntu instance. Every 5 minutes posts custom metrics into 
 
 1. [Make](#make)
 2. [Install](#install)
-2. [Configure](#configure)
-2. [Start](#start)
-2. [Set to auto-start](#set-to-auto-start)
-2. [Notes](#notes)
+3. [Configure](#configure)
+4. [Start](#start)
+5. [Set to auto-start](#set-to-auto-start)
+6. [Notes](#notes)
 
 ## Make
 
