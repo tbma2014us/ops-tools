@@ -8,3 +8,4 @@ elif [[ $(pidof /sbin/init) ]]
 then 
   cp ${SERVICE_DIR}.initd_config /etc/init.d/${SERVICE_NAME}
 fi
+cp ${SERVICE_DIR}.defaults /etc/default/${SERVICE_NAME}

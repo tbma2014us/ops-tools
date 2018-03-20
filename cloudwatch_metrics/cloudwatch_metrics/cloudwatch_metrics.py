@@ -33,6 +33,7 @@ class ArgsParser(argparse.ArgumentParser):
         self.options = None
         self.add_argument('-p', '--profile', dest='profile', help='AWS profile to use')
         self.add_argument('-r', '--region', dest='region', default='us-west-2', help='AWS region to connect')
+        self.add_argument('-i', '--interval', dest='interval', type=int, default=5, help='Sleep for that many minutes')
         self.add_argument('-v', '--verbose', dest='verbose', action='store_true', default=False, help='Be verbose')
 
     def error(self, message):
@@ -44,6 +45,7 @@ class ArgsParser(argparse.ArgumentParser):
         options = argparse.ArgumentParser.parse_args(self, *args, **kwargs)
         options.log_format = '%(filename)s:%(lineno)s[%(process)d]: %(levelname)s %(message)s'
         options.name = os.path.basename(__file__)
+        options.interval *= 60
         self.options = options
         return options
 
@@ -192,6 +194,8 @@ def sigterm_handler(*args):
 def main(args=sys.argv[1:]):
     signal.signal(signal.SIGINT, sigterm_handler)
     signal.signal(signal.SIGTERM, sigterm_handler)
+    logging.getLogger('botocore').setLevel(logging.CRITICAL)
+    logging.getLogger('boto3').setLevel(logging.CRITICAL)
 
     my_parser = ArgsParser()
     options = my_parser.parse_args(args)
@@ -199,12 +203,12 @@ def main(args=sys.argv[1:]):
     logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=options.log_format)
     logging.info('Starting %s' % options.name)
 
-    interval = 5 * 60
     while True:
-        goal = datetime.datetime.now() + datetime.timedelta(seconds=interval)
+        goal = datetime.datetime.now() + datetime.timedelta(seconds=options.interval)
+        goal.replace(second=0, microsecond=0)
         metrics(options)
         dt = goal - datetime.datetime.now()
-        sleep_time = dt.seconds + dt.microseconds / 10e6 if not dt.days < 0 else interval
+        sleep_time = dt.seconds + dt.microseconds / 10e6 if not dt.days < 0 else options.interval
         options.verbose and logging.info('Sleeping for %s seconds' % sleep_time)
         time.sleep(sleep_time)
 
