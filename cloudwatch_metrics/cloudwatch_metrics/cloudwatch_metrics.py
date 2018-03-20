@@ -202,12 +202,11 @@ def main(args=sys.argv[1:]):
 
     while True:
         goal = datetime.datetime.now() + datetime.timedelta(seconds=options.interval)
-        goal.replace(second=0, microsecond=0)
         metrics(options)
-        dt = goal - datetime.datetime.now()
-        sleep_time = dt.seconds + dt.microseconds / 10e6
+        dt = goal.replace(second=0, microsecond=0) - datetime.datetime.now()
+        sleep_time = dt.seconds + dt.microseconds / 10e5 if dt.days >= 0 else options.interval
         options.verbose and logging.info('Sleeping for %s seconds' % sleep_time)
-        time.sleep(sleep_time if sleep_time > 0 else options.interval)
+        time.sleep(sleep_time)
 
 
 if __name__ == '__main__':
