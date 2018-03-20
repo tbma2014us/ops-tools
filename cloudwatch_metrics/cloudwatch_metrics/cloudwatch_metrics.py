@@ -208,9 +208,9 @@ def main(args=sys.argv[1:]):
         goal.replace(second=0, microsecond=0)
         metrics(options)
         dt = goal - datetime.datetime.now()
-        sleep_time = dt.seconds + dt.microseconds / 10e6 if not dt.days < 0 else options.interval
+        sleep_time = dt.seconds + dt.microseconds / 10e6
         options.verbose and logging.info('Sleeping for %s seconds' % sleep_time)
-        time.sleep(sleep_time)
+        time.sleep(sleep_time if sleep_time > 0 else options.interval)
 
 
 if __name__ == '__main__':
