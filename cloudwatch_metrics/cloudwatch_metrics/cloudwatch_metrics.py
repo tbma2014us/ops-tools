@@ -1,4 +1,3 @@
-import argparse
 import datetime
 import logging
 import os
@@ -6,9 +5,11 @@ import re
 import signal
 import subprocess
 import sys
+import threading
 import time
 from pprint import pformat
 
+import argparse
 import boto3
 import botocore.client
 import botocore.exceptions
@@ -118,8 +119,18 @@ def collect_metrics():
 
     @collect
     def open_file_descriptor_count():
-        i = subprocess.check_output("lsof | wc -l", shell=True).strip()
-        yield int(i), "Count", ()
+        p = subprocess.Popen(['lsof'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        t = threading.Timer(30, p.kill)
+        try:
+            t.start()
+            c = p.stdout.read().count('\n')
+            exit_code = p.wait()
+        finally:
+            t.cancel()
+        if exit_code == 0:
+            yield int(c), "Count", ()
+        else:
+            yield 0, "Count", ()
 
     return data
 
@@ -188,12 +199,14 @@ def main(args=sys.argv[1:]):
     logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=options.log_format)
     logging.info('Starting %s' % options.name)
 
-    while 1:
-        dt = datetime.datetime.now() + datetime.timedelta(seconds=5 * 60)
+    interval = 5 * 60
+    while True:
+        goal = datetime.datetime.now() + datetime.timedelta(seconds=interval)
         metrics(options)
-        options.verbose and logging.info('Sleeping until %s' % dt.strftime('%Y-%m-%d %H:%M:%S'))
-        while datetime.datetime.now() < dt:
-            time.sleep(1)
+        dt = goal - datetime.datetime.now()
+        sleep_time = dt.seconds + dt.microseconds / 10e6 if not dt.days < 0 else interval
+        options.verbose and logging.info('Sleeping for %s seconds' % sleep_time)
+        time.sleep(sleep_time)
 
 
 if __name__ == '__main__':
