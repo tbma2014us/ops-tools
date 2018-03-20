@@ -43,7 +43,7 @@ sudo dpkg -i build/cloudwatch-metrics.deb
     * ~root/.boto
     * or AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables
 
-* Edit /etc/default/cloudwatch-metrics and add necessary options there. For example:
+* Edit **/etc/default/cloudwatch-metrics** and add necessary options there. For example:
     ```bash
     OPTIONS="--interval=1 --region=us-east-1 --profile=cloudwatch -v"
     ```
