@@ -72,33 +72,33 @@ sudo systemctl enable cloudwatch-metrics.service
 
 ## Notes
 
+* Typical IAM policy for this service:
+    ```json
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Action": [
+                    "cloudwatch:PutMetricData",
+                    "cloudwatch:GetMetricStatistics*",
+                    "cloudwatch:ListMetrics*",
+                    "ec2:DescribeTags*"
+                ],
+                "Effect": "Allow",
+                "Resource": "*"
+            }
+        ]
+    }
+    ```
+    
+
 * Currently collected metrics:
 
 
-| Posted metric  | Comments |
+| Metric  | Comments |
 | ------------- | ------------- |
 | LoadAverage  | load average|
 | MemoryUtilization  | in percent  |
 | DiskSpaceUtilization  | in percent for each MountPath  |
 | NetworkConnections  | for TCP and UDP  |
 | OpenFileDescriptorCount  | number of open files |
-
-
-* Typical IAM policy for this service:
-```json
-{
-    "Version": "2012-10-17",
-    "Statement": [
-        {
-            "Action": [
-                "cloudwatch:PutMetricData",
-                "cloudwatch:GetMetricStatistics*",
-                "cloudwatch:ListMetrics*",
-                "ec2:DescribeTags*"
-            ],
-            "Effect": "Allow",
-            "Resource": "*"
-        }
-    ]
-}
-```
