@@ -129,10 +129,7 @@ def collect_metrics():
             exit_code = p.wait()
         finally:
             t.cancel()
-        if exit_code == 0:
-            yield int(c), "Count", ()
-        else:
-            yield 0, "Count", ()
+        yield int(c) if exit_code == 0 else 0, "Count", ()
 
     return data
 
