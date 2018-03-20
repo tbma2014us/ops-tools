@@ -6,8 +6,6 @@ After=network-online.target
 [Service]
 Restart=on-failure
 EnvironmentFile=/etc/default/cloudwatch-metrics
-# Environment=AWS_ACCESS_KEY_ID=xxx
-# Environment=AWS_SECRET_ACCESS_KEY=xxx
 ExecStart=/usr/bin/cloudwatch-metrics $OPTIONS
 StandardOutput=syslog
 StandardError=syslog

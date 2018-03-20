@@ -12,8 +12,6 @@ SCRIPT=/usr/bin/cloudwatch-metrics
 RUNAS=root
 PIDFILE=/var/run/cloudwatch-metrics.pid
 LOGFILE=/var/log/cloudwatch-metrics.log
-# AWS_ACCESS_KEY_ID=xxx
-# AWS_SECRET_ACCESS_KEY=xxx
 OPTIONS=""
 DEFAULTS=/etc/default/cloudwatch-metrics
 [ -r "$DEFAULTS" ] && . "$DEFAULTS"
