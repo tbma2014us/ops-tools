@@ -41,7 +41,7 @@ sudo dpkg -i build/cloudwatch-metrics.deb
     * ~root/.aws/config
     * /etc/boto.cfg
     * ~root/.boto
-    * Amazon AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables, specified in ```/etc/default/cloudwatch-metrics```
+    * AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables, specified in ```/etc/default/cloudwatch-metrics```
 
 * Edit ```/etc/default/cloudwatch-metrics``` and add necessary options there. For example:
     ```bash
