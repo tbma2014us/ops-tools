@@ -47,7 +47,10 @@ sudo dpkg -i build/cloudwatch-metrics.deb
     ```bash
     OPTIONS="--verbose"
     ```
-    
+    * Check available options by running:
+        ```bash
+        /usr/bin/cloudwatch-metrics -h
+        ```
 ## Start
 
 Start service on deprecated (upstart) system
