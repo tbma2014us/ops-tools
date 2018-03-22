@@ -8,4 +8,4 @@ then
   rm -f /etc/init.d/${SERVICE_NAME}
 fi
 rm -f /usr/bin/${SERVICE_NAME}
-fm -f /etc/default/${SERVICE_NAME}
+rm -f /etc/default/${SERVICE_NAME}
