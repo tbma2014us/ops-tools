@@ -15,7 +15,7 @@ class ArgsParser(argparse.ArgumentParser):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault(
             'description',
-            'Decrypts encrypted variable files')
+            'Decrypts encrypted env files')
         argparse.ArgumentParser.__init__(self, *args, **kwargs)
         self.formatter_class = argparse.RawTextHelpFormatter
         self.epilog = '\nUse in bash scripts as\n export $(kms-decrypt-to-env secret.env.enc)\n'
