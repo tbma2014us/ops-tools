@@ -1,9 +1,9 @@
 #!/usr/bin/env python
+import cStringIO
 import logging
 import os
 import subprocess
 import sys
-import cStringIO
 
 import argparse
 import aws_encryption_sdk
