@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 import logging
 import os
+import subprocess
 import sys
+import cStringIO
 
 import argparse
 import aws_encryption_sdk
@@ -13,17 +15,16 @@ class ArgsParser(argparse.ArgumentParser):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault(
             'description',
-            'Decrypts files encrypted with kms-encrypt')
+            'Decrypts encrypted variable files')
         argparse.ArgumentParser.__init__(self, *args, **kwargs)
-        self.formatter_class = argparse.ArgumentDefaultsHelpFormatter
-        self.epilog = 'You need to create KMS keys before using this. By default it tries to use "alias/ec2" key'
+        self.formatter_class = argparse.RawTextHelpFormatter
+        self.epilog = '\nUse in bash scripts as\n export $(kms-decrypt-to-env secret.env.enc)\n'
         self.options = None
         self.add_argument('-a', '--alias', dest='key_alias', help='KMS key alias', default='alias/ec2')
         self.add_argument('-p', '--profile', dest='profile', help='AWS profile to use')
         self.add_argument('-r', '--region', dest='region', default='us-west-2', help='AWS region to connect')
         self.add_argument('-v', '--verbose', dest='verbose', action='store_true', default=False, help='Be verbose')
-        self.add_argument('in_file', help='Name of the encrypted input file',)
-        self.add_argument('out_file', help='Name of the output file', nargs='?')
+        self.add_argument('in_file', help='Name of the encrypted environment file',)
 
     def error(self, message):
         sys.stderr.write('Error: %s\n\n' % message)
@@ -42,7 +43,7 @@ class ArgsParser(argparse.ArgumentParser):
         return options
 
 
-class KmsDecrypt(object):
+class KmsDecryptEnv(object):
     def __init__(self, _session):
         self.session = _session
 
@@ -66,17 +67,34 @@ class KmsDecrypt(object):
         ))
         return kms_master_key_provider
 
-    def decrypt_file(self, key_alias, input_filename, output_filename):
+    def decrypt_file_to_env(self, key_alias, input_filename):
         key_provider = self.build_kms_master_key_provider(key_alias)
+        used_keys = []
+        output = cStringIO.StringIO()
+        p = subprocess.Popen(
+            ['/bin/bash'],
+            env={},
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE
+        )
         with open(input_filename, 'rb') as infile, \
-                open(output_filename, 'wb') as outfile, \
                 aws_encryption_sdk.stream(
                     mode='d',
                     source=infile,
                     key_provider=key_provider
                 ) as decryptor:
             for chunk in decryptor:
-                outfile.write(chunk)
+                output.write(chunk)
+        output.seek(0)
+        for output_line in output:
+            (key, _, _) = output_line.partition("=")
+            used_keys.append(key)
+            p.stdin.write(output_line)
+        p.stdin.write('\nset\nexit\n')
+        for line in p.stdout:
+            (key, _, value) = line.partition("=")
+            if key in used_keys:
+                print line.strip()
 
 
 def main(args=sys.argv[1:]):
@@ -89,12 +107,11 @@ def main(args=sys.argv[1:]):
     logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=options.log_format)
     session = boto3.session.Session()
 
-    k = KmsDecrypt(session)
+    k = KmsDecryptEnv(session)
     try:
-        k.decrypt_file(
+        k.decrypt_file_to_env(
             options.key_alias,
             options.in_file,
-            options.out_file
         )
     except botocore.exceptions.ClientError as e:
         raise SystemExit(e)
