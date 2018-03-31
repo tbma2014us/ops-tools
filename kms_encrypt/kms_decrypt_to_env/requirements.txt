@@ -2,7 +2,6 @@ argparse
 aws_encryption_sdk
 boto3
 botocore
-requests
-aws_encryption_sdk 
-pyOpenSSL
 kms_decrypt_to_env
+pyOpenSSL
+requests
