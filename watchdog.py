@@ -81,8 +81,8 @@ def main(args=sys.argv[1:]):
     try:
         while 1:
             logging.info('Starting watchdog run')
-            with contextlib.closing(shelve.open(os.path.join(tempfile.gettempdir(), options.name), 'c')) as shelf:
-                with contextlib.closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as sock:
+            with contextlib.closing(shelve.open(os.path.join(tempfile.gettempdir(), options.name), 'c')) as shelf, \
+                    contextlib.closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as sock:
                     sock.settimeout(5)
                     connect_errors = None
                     executed = shelf.get(options.name)
