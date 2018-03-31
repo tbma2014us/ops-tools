@@ -1,7 +1,7 @@
 ## Synopsis
 **kms-encrypt**
 
-Encrypts and decrypts files with AWS KMS keys.
+Encrypts and decrypts files with AWS KMS keys
 
 1. [Make](#make)
 2. [Install](#install)
@@ -40,5 +40,5 @@ This installs ```kms-encrypt```, ```kms-decrypt```, and ```kms-decrypt-to-env```
     * ~root/.aws/config
     * /etc/boto.cfg
     * ~root/.boto
-    * AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables
+    * ```AWS_ACCESS_KEY_ID``` and ```AWS_SECRET_ACCESS_KEY``` environment variables
 
