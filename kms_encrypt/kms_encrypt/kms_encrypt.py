@@ -8,12 +8,15 @@ import aws_encryption_sdk
 import boto3
 import botocore.exceptions
 
+__version__ = '1.0.0'
+logger = logging.getLogger()
+
 
 class ArgsParser(argparse.ArgumentParser):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault(
             'description',
-            'Decrypts files encrypted with kms-encrypt')
+            'Encrypts files with KMS keys')
         argparse.ArgumentParser.__init__(self, *args, **kwargs)
         self.formatter_class = argparse.ArgumentDefaultsHelpFormatter
         self.epilog = 'You need to create KMS keys before using this. By default it tries to use "alias/ec2" key'
@@ -22,11 +25,11 @@ class ArgsParser(argparse.ArgumentParser):
         self.add_argument('-p', '--profile', dest='profile', help='AWS profile to use')
         self.add_argument('-r', '--region', dest='region', default='us-west-2', help='AWS region to connect')
         self.add_argument('-v', '--verbose', dest='verbose', action='store_true', default=False, help='Be verbose')
-        self.add_argument('in_file', help='Name of the encrypted input file',)
-        self.add_argument('out_file', help='Name of the output file', nargs='?')
+        self.add_argument('in_file', help='Name of the unencrypted input file',)
+        self.add_argument('out_file', help='Name of the output file, will encrypt to .enc if not specified', nargs='?')
 
     def error(self, message):
-        sys.stderr.write('Error: %s\n\n' % message)
+        sys.stderr.write('Error: %s\n' % message)
         self.print_help()
         sys.exit(2)
 
@@ -34,15 +37,11 @@ class ArgsParser(argparse.ArgumentParser):
         options = argparse.ArgumentParser.parse_args(self, *args, **kwargs)
         options.log_format = '%(filename)s:%(lineno)s[%(process)d]: %(levelname)s %(message)s'
         options.name = os.path.basename(__file__)
-        if not options.out_file and options.in_file.endswith('.enc'):
-            options.out_file = options.in_file[:-4]
-        elif not options.out_file:
-            self.error('Please specify output file')
         self.options = options
         return options
 
 
-class KmsDecrypt(object):
+class KmsEncrypt(object):
     def __init__(self, _session):
         self.session = _session
 
@@ -66,17 +65,17 @@ class KmsDecrypt(object):
         ))
         return kms_master_key_provider
 
-    def decrypt_file(self, key_alias, input_filename, output_filename):
+    def encrypt_file(self, key_alias, input_filename, output_filename):
         key_provider = self.build_kms_master_key_provider(key_alias)
-        with open(input_filename, 'rb') as infile, \
-                open(output_filename, 'wb') as outfile, \
+        with open(input_filename, 'rb') as infile,\
+                open(output_filename, 'wb') as outfile,\
                 aws_encryption_sdk.stream(
-                    mode='d',
+                    mode='e',
                     source=infile,
                     key_provider=key_provider
-                ) as decryptor:
-            for chunk in decryptor:
-                outfile.write(chunk)
+                ) as encryptor:
+                    for chunk in encryptor:
+                        outfile.write(chunk)
 
 
 def main(args=sys.argv[1:]):
@@ -89,12 +88,12 @@ def main(args=sys.argv[1:]):
     logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=options.log_format)
     session = boto3.session.Session()
 
-    k = KmsDecrypt(session)
+    k = KmsEncrypt(session)
     try:
-        k.decrypt_file(
+        k.encrypt_file(
             options.key_alias,
             options.in_file,
-            options.out_file
+            options.out_file or options.in_file + '.enc'
         )
     except botocore.exceptions.ClientError as e:
         raise SystemExit(e)

@@ -1,0 +1,8 @@
+argparse
+aws_encryption_sdk
+boto3
+botocore
+requests
+aws_encryption_sdk 
+pyOpenSSL
+kms_encrypt

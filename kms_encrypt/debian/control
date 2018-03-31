@@ -1,0 +1,8 @@
+Architecture: all
+Depends: 
+Description: KMS encryption tools
+Maintainer: Alex Zimin <alex.zimin@gmail.com>
+Package: kms-encrypt
+Priority: optional
+Section: base
+Version: 1.0

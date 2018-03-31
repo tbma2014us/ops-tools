@@ -10,6 +10,9 @@ import aws_encryption_sdk
 import boto3
 import botocore.exceptions
 
+__version__ = '1.0.0'
+logger = logging.getLogger()
+
 
 class ArgsParser(argparse.ArgumentParser):
     def __init__(self, *args, **kwargs):
