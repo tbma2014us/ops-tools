@@ -108,10 +108,11 @@ def main(args=sys.argv[1:]):
         not options.verbose and logging.getLogger(m).setLevel(logging.CRITICAL)
 
     logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=options.log_format)
-    session = boto3.session.Session()
-
-    k = KmsDecryptEnv(session)
     try:
+        session = boto3.session.Session()
+
+        k = KmsDecryptEnv(session)
+
         k.decrypt_file_to_env(
             options.key_alias,
             options.in_file,
