@@ -37,7 +37,8 @@ class ArgsParser(argparse.ArgumentParser):
         options = argparse.ArgumentParser.parse_args(self, *args, **kwargs)
         options.log_format = '%(filename)s:%(lineno)s[%(process)d]: %(levelname)s %(message)s'
         options.name = os.path.basename(__file__)
-        if not options.out_file and options.in_file.endswith('.enc'):
+        if not options.out_file and \
+                options.in_file.endswith('.enc'):
             options.out_file = options.in_file[:-4]
         elif not options.out_file:
             self.error('Please specify output file')
@@ -55,7 +56,7 @@ class KmsDecrypt(object):
 
     def build_kms_master_key_provider(self, alias):
         if not self.alias_exists(alias):
-            raise SystemExit('FATAL: alias %s does not exists in %s' % (
+            raise SystemExit('FATAL: alias %s does not exist in %s' % (
                 alias,
                 self.session.region_name,
             ))

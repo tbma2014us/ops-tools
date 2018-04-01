@@ -56,7 +56,7 @@ class KmsDecryptEnv(object):
 
     def build_kms_master_key_provider(self, alias):
         if not self.alias_exists(alias):
-            raise SystemExit('FATAL: alias %s does not exists in %s' % (
+            raise SystemExit('FATAL: alias %s does not exist in %s' % (
                 alias,
                 self.session.region_name,
             ))
