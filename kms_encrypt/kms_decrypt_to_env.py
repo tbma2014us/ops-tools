@@ -66,7 +66,7 @@ class KmsDecryptEnv(object):
         kms_master_key_provider.add_master_key(arn_template.format(
             region=self.session.region_name,
             account_id=account_id,
-            alias=alias
+            alias=alias,
         ))
         return kms_master_key_provider
 
