@@ -1,5 +1,5 @@
 Architecture: all
-Depends: 
+Depends: zlib1g, python2.7
 Description: CloudWatch posting service
 Maintainer: Alex Zimin <alex.zimin@gmail.com>
 Package: cloudwatch-metrics
