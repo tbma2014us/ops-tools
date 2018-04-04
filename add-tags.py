@@ -6,7 +6,7 @@ import argparse
 import boto3
 import botocore.exceptions
 
-LOG_FORMAT = '%(filename)s:%(lineno)s[%(process)d]: %(levelname)s %(message)s'
+LOG_FORMAT = '%(asctime)s %(filename)s:%(lineno)s[%(process)d]: %(levelname)s %(message)s'
 
 
 class ArgsParser(argparse.ArgumentParser):
