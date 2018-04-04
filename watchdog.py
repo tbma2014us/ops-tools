@@ -18,6 +18,7 @@ import tempfile
 import time
 
 
+# noinspection PyTypeChecker
 class ArgsParser(argparse.ArgumentParser):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault(
@@ -33,7 +34,11 @@ class ArgsParser(argparse.ArgumentParser):
         self.add_argument('-r', '--retry_after', type=int, dest='seconds', default=61)
         self.add_argument('-c', '--command', dest='command', default='echo restarting')
         self.add_argument('-cd', '--cooldown', type=int, dest='hours', default=4)
-        self.add_argument('-d', '--daemonize', type=int, dest='daemonize')
+
+    def error(self, message):
+        sys.stderr.write('error: %s\n' % message)
+        self.print_help()
+        sys.exit(2)
 
     def parse_args(self, *args, **kwargs):
         options = argparse.ArgumentParser.parse_args(self, *args, **kwargs)
@@ -42,11 +47,6 @@ class ArgsParser(argparse.ArgumentParser):
         options.name = os.path.splitext(__file__)[0]
         self.options = options
         return options
-
-    def error(self, message):
-        sys.stderr.write('error: %s\n' % message)
-        self.print_help()
-        sys.exit(2)
 
 
 def execute(command):
@@ -57,7 +57,7 @@ def execute(command):
             return datetime.datetime.now()
     except OSError as e:
         logging.error('Exec error: %s' % e)
-        raise SystemExit()
+        raise SystemExit(1)
 
 
 def start_logging(_log_format):
@@ -79,40 +79,35 @@ def main(args=sys.argv[1:]):
     logger = start_logging(options.log_format)
 
     try:
-        while 1:
-            logging.info('Starting watchdog run')
-            with contextlib.closing(shelve.open(os.path.join(tempfile.gettempdir(), options.name), 'c')) as shelf, \
-                    contextlib.closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as sock:
-                    sock.settimeout(5)
-                    connect_errors = None
-                    executed = shelf.get(options.name)
-                    for _ in range(0, random.randint(3, 5)):
-                        connect_errors = sock.connect_ex(
-                            (options.service_address, options.service_port))
-                        if not connect_errors:
-                            break
-                        else:
-                            logging.info('Trying to connect to %s:%s' % (
-                                options.service_address, options.service_port))
-                            time.sleep(options.seconds)
+        logging.info('Starting watchdog run')
+        with contextlib.closing(shelve.open(os.path.join(tempfile.gettempdir(), options.name), 'c')) as shelf, \
+                contextlib.closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as sock:
+                sock.settimeout(5)
+                connect_errors = None
+                executed = shelf.get(options.name)
+                for _ in range(0, random.randint(3, 5)):
+                    connect_errors = sock.connect_ex(
+                        (options.service_address, options.service_port))
+                    if not connect_errors:
+                        break
                     else:
-                        logging.info('Cannot connect to %s:%s, issuing exec' %
-                                     (options.service_address, options.service_port))
-                    if connect_errors and not executed:
+                        logging.info('Trying to connect to %s:%s' % (
+                            options.service_address, options.service_port))
+                        time.sleep(options.seconds)
+                else:
+                    logging.info('Cannot connect to %s:%s, issuing exec' %
+                                 (options.service_address, options.service_port))
+                if connect_errors and not executed:
+                    shelf[options.name] = execute(options.command)
+                elif connect_errors and executed:
+                    if datetime.datetime.now() - executed >= options.command_cooldown:
                         shelf[options.name] = execute(options.command)
-                    elif connect_errors and executed:
-                        if datetime.datetime.now() - executed >= options.command_cooldown:
-                            shelf[options.name] = execute(options.command)
-                        else:
-                            next_run = (executed + options.command_cooldown).strftime('%Y-%m-%d %H:%M:%S')
-                            logging.info('Watchdog exec cooldown is in effect until %s' % next_run)
                     else:
-                        logging.info('%s:%s OK' % (options.service_address, options.service_port))
-                        shelf.clear()
-            if options.daemonize:
-                time.sleep(options.daemonize)
-            else:
-                break
+                        next_run = (executed + options.command_cooldown).strftime('%Y-%m-%d %H:%M:%S')
+                        logging.info('Watchdog exec cooldown is in effect until %s' % next_run)
+                else:
+                    logging.info('%s:%s OK' % (options.service_address, options.service_port))
+                    shelf.clear()
     except KeyboardInterrupt:
         sys.exit(0)
 
