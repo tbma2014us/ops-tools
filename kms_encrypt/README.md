@@ -30,7 +30,7 @@ or
 sudo dpkg -i build/kms-encrypt.deb
 ```
 
-This installs ```kms-encrypt```, ```kms-decrypt```, and ```kms-decrypt-to-env``` binary executables  in /usr/bin
+This installs ```kms-encrypt```, ```kms-decrypt```, and ```kms-decrypt-to-env``` binary executables  in ```/usr/bin```
 
 ## Configure
 
