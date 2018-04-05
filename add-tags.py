@@ -21,7 +21,7 @@ class ArgsParser(argparse.ArgumentParser):
         self.add_argument('--dry-run', dest='dry_run', action='store_true', default=False,
                           help="Don't actually do anything; just print out what would be done")
         self.add_argument('name', help='Name of the EC2 or RDS instance', nargs='+')
-        self.add_argument('-t', '--tag', dest='tag', help="name=value for the tag")
+        self.add_argument('-t', '--tags', dest='tags', help='name=value for the tag', nargs= '+')
 
     def error(self, message):
         sys.stderr.write('ERROR: %s\n\n' % message)
@@ -30,7 +30,7 @@ class ArgsParser(argparse.ArgumentParser):
 
     def parse_args(self, *args, **kwargs):
         options = argparse.ArgumentParser.parse_args(self, *args, **kwargs)
-        if '=' not in options.tag:
+        if any([t for t in options.tags if '=' not in t]):
             raise SystemExit('Please specify tag as TagName=Value')
         self.options = options
         return options
@@ -65,16 +65,20 @@ def main(args=sys.argv[1:]):
             instances.append(r.id)
 
         if instances:
-            (tag, _, value) = options.tag.partition("=")
+            tags = []
+            for _ in options.tags:
+                (key, _, value) = options.tag.partition("=")
+                tags.append(dict(Key=key, Value=value))
             logging.info('Setting tags on %s' % ' '.join(instances))
 
             ec2.create_tags(
                 Resources=instances,
-                Tags=[{'Key': tag, 'Value': value}],
+                Tags=tags,
                 DryRun=options.dry_run,
             )
 
-    except botocore.exceptions.ClientError as e:
+    except (botocore.exceptions.ClientError, 
+            botocore.exceptions.NoCredentialsError) as e:
         raise SystemExit(e)
 
 
