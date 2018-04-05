@@ -63,8 +63,8 @@ def main(args=sys.argv[1:]):
         ec2 = session.resource('ec2')
         instances = []
 
-        for hostname in options.names:
-            r = lookup(ec2, hostname)
+        for name in options.names:
+            r = lookup(ec2, name)
             instances.append(r.id)
 
         if instances:
