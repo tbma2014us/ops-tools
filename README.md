@@ -7,13 +7,13 @@ DevOps tools written in Python
 
 
 ## cloudwatch_metrics
-Service daemon for Ubuntu servers to post custom CloudWatch metrics.
+Service daemon for Ubuntu servers to post custom AWS CloudWatch metrics.
 
 ## kms_encrypt
 A set of tools to work with AWS KMS encryption.
 
 ## add-tags.py
-Adds tags to AWS ec2 instances by name or instance id
+Adds tags to AWS EC2 instances by name or instance id
 
 ## watchdog.py
 TCP-port watchdog. Monitors availability of the TCP port, runs external process if port is unavailable.
