@@ -64,14 +64,15 @@ def main(args=sys.argv[1:]):
             r = lookup(ec2, hostname)
             instances.append(r.id)
 
-        (tag, _, value) = options.tag.partition("=")
-        logging.info('Setting tags on %s' % ' '.join(instances))
+        if instances:
+            (tag, _, value) = options.tag.partition("=")
+            logging.info('Setting tags on %s' % ' '.join(instances))
 
-        ec2.create_tags(
-            Resources=instances,
-            Tags=[{'Key': tag, 'Value': value}],
-            DryRun=options.dry_run,
-        )
+            ec2.create_tags(
+                Resources=instances,
+                Tags=[{'Key': tag, 'Value': value}],
+                DryRun=options.dry_run,
+            )
 
     except botocore.exceptions.ClientError as e:
         raise SystemExit(e)
