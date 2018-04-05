@@ -66,8 +66,8 @@ def main(args=sys.argv[1:]):
 
         if instances:
             tags = []
-            for _ in options.tags:
-                (key, _, value) = options.tag.partition("=")
+            for tag in options.tags:
+                (key, _, value) = tag.partition("=")
                 tags.append(dict(Key=key, Value=value))
             logging.info('Setting tags on %s' % ' '.join(instances))
 
@@ -77,7 +77,7 @@ def main(args=sys.argv[1:]):
                 DryRun=options.dry_run,
             )
 
-    except (botocore.exceptions.ClientError, 
+    except (botocore.exceptions.ClientError,
             botocore.exceptions.NoCredentialsError) as e:
         raise SystemExit(e)
 
