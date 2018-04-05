@@ -2,8 +2,8 @@
 DevOps tools written in Python
 1. [cloudwatch_metrics](cloudwatch_metrics/README.md)
 2. [kms_encrypt](kms_encrypt/README.md)
-3. [add-tags.py](#add-tags.py)
-4. [watchdog.py](#watchdog.py)
+3. [add-tags.py](#add-tagspy)
+4. [watchdog.py](#watchdogpy)
 
 
 ## cloudwatch_metrics
