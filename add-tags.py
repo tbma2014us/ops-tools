@@ -23,8 +23,8 @@ class ArgsParser(argparse.ArgumentParser):
         self.add_argument('-p', '--profile', dest='profile', help='Profile to use')
         self.add_argument('--dry-run', dest='dry_run', action='store_true', default=False,
                           help="Don't actually do anything; just print out what would be done")
-        self.add_argument('name', help='Name of the EC2 or RDS instance', nargs='+')
-        self.add_argument('-t', '--tags', dest='tags', help='name=value for the tag', nargs= '+')
+        self.add_argument('names', help='Name of the EC2 or RDS instance', nargs='+')
+        self.add_argument('-t', '--tags', dest='tags', help='Space separated name=value for the tags', nargs= '+')
 
     def error(self, message):
         sys.stderr.write('ERROR: %s\n\n' % message)
@@ -63,7 +63,7 @@ def main(args=sys.argv[1:]):
         ec2 = session.resource('ec2')
         instances = []
 
-        for hostname in options.name:
+        for hostname in options.names:
             r = lookup(ec2, hostname)
             instances.append(r.id)
 
