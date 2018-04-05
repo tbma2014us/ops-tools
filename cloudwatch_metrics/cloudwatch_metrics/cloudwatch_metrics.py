@@ -19,6 +19,7 @@ __version__ = '1.0.0'
 logger = logging.getLogger()
 
 
+# noinspection PyTypeChecker
 class ArgsParser(argparse.ArgumentParser):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault(
@@ -189,22 +190,26 @@ def sigterm_handler(*args):
 
 
 def main(args=sys.argv[1:]):
-    signal.signal(signal.SIGINT, sigterm_handler)
-    signal.signal(signal.SIGTERM, sigterm_handler)
-    logging.getLogger('botocore').setLevel(logging.CRITICAL)
-    logging.getLogger('boto3').setLevel(logging.CRITICAL)
-
     my_parser = ArgsParser()
     options = my_parser.parse_args(args)
+
+    for s in [signal.SIGINT, signal.SIGTERM]:
+        signal.signal(s, sigterm_handler)
+
+    for m in ['boto3', 'botocore']:
+        not options.verbose and logging.getLogger(m).setLevel(logging.CRITICAL)
 
     logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=options.log_format)
     logging.info('Starting %s' % options.name)
 
     while True:
-        goal = datetime.datetime.now() + datetime.timedelta(seconds=options.interval)
+        next_run = datetime.datetime.now() + datetime.timedelta(seconds=options.interval)
+
         metrics(options)
-        dt = goal.replace(second=0, microsecond=0) - datetime.datetime.now()
+
+        dt = next_run.replace(second=0, microsecond=0) - datetime.datetime.now()
         sleep_time = dt.seconds + dt.microseconds / 1e6 if dt.days >= 0 else options.interval
+
         options.verbose and logging.info('Sleeping for %s seconds' % sleep_time)
         time.sleep(sleep_time)
 
