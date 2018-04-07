@@ -33,7 +33,7 @@ class ArgsParser(argparse.ArgumentParser):
 
     def parse_args(self, *args, **kwargs):
         options = argparse.ArgumentParser.parse_args(self, *args, **kwargs)
-        if any([t for t in options.tags if '=' not in t]):
+        if any([t for t in options.tags if '=' not in t or t.count('=') > 1]):
             raise SystemExit('Please specify tag as TagName=Value')
         self.options = options
         return options
