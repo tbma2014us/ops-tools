@@ -61,8 +61,9 @@ def main(args=sys.argv[1:]):
         instances = []
 
         for name in options.name:
-            r = lookup(ec2, name)
-            instances.extend(r)
+            instances.extend(
+                lookup(ec2, name)
+            )
 
         if instances:
             tags = []
