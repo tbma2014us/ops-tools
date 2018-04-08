@@ -46,11 +46,8 @@ def lookup(conn, host):
         instances = conn.instances.filter(
             Filters=[dict(Name='tag:Name', Values=[host])]
         )
-    try:
-        return next(iter(instances))
-    except StopIteration:
-        logging.error('Cannot find %s' % host)
-        return
+    not instances and logging.error('Cannot find %s' % host)
+    return [i.id for i in instances]
 
 
 def main(args=sys.argv[1:]):
@@ -65,7 +62,7 @@ def main(args=sys.argv[1:]):
 
         for name in options.name:
             r = lookup(ec2, name)
-            instances.append(r.id)
+            instances.extend(r)
 
         if instances:
             tags = []
