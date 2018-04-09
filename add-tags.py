@@ -46,7 +46,7 @@ def lookup(conn, host):
         instances = conn.instances.filter(
             Filters=[dict(Name='tag:Name', Values=[host])]
         )
-    not instances and logging.error('Cannot find %s' % host)
+    not list(instances) and logging.error('Cannot find %s' % host)
     return [i.id for i in instances]
 
 
