@@ -3,6 +3,7 @@ DevOps tools written in Python
 1. [cloudwatch_metrics](cloudwatch_metrics/)
 2. [kms_encrypt](kms_encrypt/)
 3. [add-tags.py](#add-tagspy)
+3. [start-stop.py](#start-stoppy)
 4. [watchdog.py](#watchdogpy)
 
 
@@ -14,6 +15,9 @@ A set of tools to work with AWS KMS encryption.
 
 ## add-tags.py
 Adds tags to AWS EC2 instances by name or instance id
+
+## start-stop.py
+Starts or stops AWS EC2 instances by name or instance id
 
 ## watchdog.py
 TCP-port watchdog. Monitors availability of the TCP port, runs external process if port is unavailable.
