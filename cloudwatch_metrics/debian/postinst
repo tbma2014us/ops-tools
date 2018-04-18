@@ -1,6 +1,7 @@
 #!/bin/bash
 SERVICE_NAME='cloudwatch-metrics'
 SERVICE_DIR='/var/lib/dpkg/info/cloudwatch-metrics'
+cp ${SERVICE_DIR}.defaults /etc/default/${SERVICE_NAME}
 if [[ $(pidof -s systemd) ]]
 then 
   cp ${SERVICE_DIR}.systemd_config /lib/systemd/system/${SERVICE_NAME}.service
@@ -8,4 +9,3 @@ elif [[ $(pidof /sbin/init) ]]
 then 
   cp ${SERVICE_DIR}.initd_config /etc/init.d/${SERVICE_NAME}
 fi
-cp ${SERVICE_DIR}.defaults /etc/default/${SERVICE_NAME}
