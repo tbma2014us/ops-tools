@@ -7,5 +7,4 @@ elif [[ $(pidof /sbin/init) ]]
 then
   rm -f /etc/init.d/${SERVICE_NAME}
 fi
-rm -f /usr/bin/${SERVICE_NAME}
 rm -f /etc/default/${SERVICE_NAME}
