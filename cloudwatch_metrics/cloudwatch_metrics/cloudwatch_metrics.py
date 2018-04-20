@@ -44,7 +44,7 @@ class ArgsParser(argparse.ArgumentParser):
 
     def parse_args(self, *args, **kwargs):
         options = argparse.ArgumentParser.parse_args(self, *args, **kwargs)
-        options.log_format = '%(filename)s:%(lineno)s[%(process)d]: %(levelname)s %(message)s'
+        options.log_format = '[%(levelname)s] (%(process)d:%(filename)s:%(lineno)s) %(message)s'
         options.name = os.path.basename(__file__)
         options.interval *= 60
         self.options = options
