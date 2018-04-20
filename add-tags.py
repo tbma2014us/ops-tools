@@ -74,7 +74,7 @@ def main(args=sys.argv[1:]):
             for tag in options.tags:
                 (key, _, value) = tag.partition("=")
                 tags.append(dict(Key=key, Value=value))
-            logging.info('Setting tags on %s' % ' '.join(instances))
+            options.verbose and logging.info('Setting tags on %s' % ' '.join(instances))
 
             ec2.create_tags(
                 Resources=instances,
