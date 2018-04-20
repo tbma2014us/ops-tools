@@ -55,6 +55,9 @@ def main(args=sys.argv[1:]):
     options = myparser.parse_args(args)
     logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=LOG_FORMAT)
 
+    for m in ['boto3', 'botocore']:
+        not options.verbose and logging.getLogger(m).setLevel(logging.CRITICAL)
+
     try:
         session = boto3.session.Session(region_name=options.region, profile_name=options.profile)
         ec2 = session.resource('ec2')
