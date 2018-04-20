@@ -23,6 +23,7 @@ class ArgsParser(argparse.ArgumentParser):
         self.add_argument('-p', '--profile', dest='profile', help='Profile to use')
         self.add_argument('--dry-run', dest='dry_run', action='store_true', default=False,
                           help="Don't actually do anything; just print out what would be done")
+        self.add_argument('-v', '--verbose', dest='verbose', action='store_true', default=False, help='Be verbose')
         self.add_argument('name', help="Names or id's of the EC2 instances", nargs='+')
         self.add_argument('-t', '--tags', dest='tags', help='Space separated name=value for the tags', nargs='+')
 
