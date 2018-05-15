@@ -84,7 +84,7 @@ def create_ami(conn, instance_id, ami_name, start, ami_desc=None):
         return False, None
 
 
-def clean_ip(conn, instance, region):
+def clean_up(conn, instance, region):
     try:
         instance_name = get_tag(instance.tags, 'Name')
         filters = [{'Name': 'state', 'Values': ['available']},
@@ -143,7 +143,7 @@ def worker(profile, region):
         )
         success, image_id = create_ami(session.resource('ec2'), instance.id, ami_name, now)
         if success and image_id:
-            clean_ip(session.resource('ec2'), instance, session.region_name)
+            clean_up(session.resource('ec2'), instance, session.region_name)
         q.task_done()
 
 
