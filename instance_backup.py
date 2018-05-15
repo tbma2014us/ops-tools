@@ -87,12 +87,10 @@ def create_ami(conn, instance_id, ami_name, start, ami_desc=None):
 def clean_up(conn, instance, region):
     try:
         instance_name = get_tag(instance.tags, 'Name')
-        filters = [{'Name': 'state', 'Values': ['available']},
-                   {'Name': 'name', 'Values': ['%s_%s_*' % (
-                       instance_name,
-                       region
-                   )]}]
-        images = list(conn.images.filter(Filters=filters))
+        images = list(conn.images.filter(Filters=[
+            {'Name': 'state', 'Values': ['available']},
+            {'Name': 'name', 'Values': ['%s_%s_*' % (instance_name, region)]}
+        ]))
         logging.info('Found %s images for %s (%s) in %s' % (
             len(images),
             instance_name,
@@ -218,7 +216,7 @@ def main(args=sys.argv[1:]):
             threads.append(worker_thread)
 
         while len(threading.enumerate()) > 1:
-            if datetime.datetime.now() - start > datetime.timedelta(hours=2):
+            if datetime.datetime.now() - start > datetime.timedelta(hours=4):
                 raise SystemExit('Exiting on timeout')
             time.sleep(1)
 
