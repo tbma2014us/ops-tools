@@ -115,8 +115,9 @@ def clean_up(conn, instance, region):
                 break
         deleting = list(set(purgeable) - set(not_purgeable) - set(used_amis))
         if deleting:
-            logging.info('De-registering %s image(s) for %s' % (
+            logging.info('De-registering %s image%s for %s' % (
                 len(deleting),
+                's' if len(deleting) == 1 else '',
                 instance_name)
             )
             for ami in deleting:
