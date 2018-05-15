@@ -99,6 +99,7 @@ def clean_up(conn, instance, region):
             instance.id,
             region
         ))
+        
         current_week = datetime.datetime.utcnow().isocalendar()[1]
         purgeable = sorted(images, key=lambda x: x.creation_date, reverse=True)[7:]
         used_amis = get_all_used_amis(conn)
@@ -112,6 +113,7 @@ def clean_up(conn, instance, region):
                 current_week = ami_creation_week
             if len(not_purgeable) >= 7:
                 break
+
         deleting = list(set(purgeable) - set(not_purgeable) - set(used_amis))
         if deleting:
             logging.info('De-registering %s image%s for %s' % (
@@ -123,6 +125,7 @@ def clean_up(conn, instance, region):
                 logging.info('De-registering %s (%s)' % (ami.name, ami.id))
                 conn.meta.client.deregister_image(ImageId=ami.id)
                 time.sleep(15)
+
     except (botocore.exceptions.ClientError,
             botocore.exceptions.NoCredentialsError) as e:
         logging.error(e)
