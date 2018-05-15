@@ -176,12 +176,8 @@ def lookup(conn, host, filters=None):
 
 
 def get_all_used_amis(conn):
-    used_amis = []
-    instances = list(conn.instances.filter())
-    for instance in instances:
-        if instance.image_id not in used_amis:
-            used_amis.append(instance.image_id)
-    return used_amis
+    used_amis = [instance.image_id for instance in list(conn.instances.filter())]
+    return list(set(used_amis))
 
 
 def sigterm_handler(*args):
