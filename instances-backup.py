@@ -159,7 +159,7 @@ def get_tag(_tags, tag_name):
 
 
 def lookup(conn, host, filters=None):
-    filters = filters or [dict(Name='tag:Name', Values=[host])]
+    filters = filters or [{'Name': 'tag:Name', 'Values': [host]}]
     if host.startswith("i-") and (len(host) == 10 or len(host) == 19):
         instances = conn.instances.filter(InstanceIds=[host])
     else:
@@ -206,7 +206,7 @@ def main(args=sys.argv[1:]):
             for instance in options.instances:
                 instances.extend(lookup(ec2, instance))
         else:
-            instances = lookup(ec2, '', filters=[dict(Name='tag:Backup', Values=['yes'])])
+            instances = lookup(ec2, '', filters=[{'Name': 'tag:Backup', 'Values': ['yes']}])
 
         map(q.put, instances)
         for t in range(multiprocessing.cpu_count() * 2):
