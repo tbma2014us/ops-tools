@@ -99,7 +99,7 @@ def clean_up(conn, instance, region):
             instance.id,
             region
         ))
-        
+
         current_week = datetime.datetime.utcnow().isocalendar()[1]
         purgeable = sorted(images, key=lambda x: x.creation_date, reverse=True)[7:]
         used_amis = get_all_used_amis(conn)
