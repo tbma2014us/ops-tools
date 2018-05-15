@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import Queue
+import datetime
 import logging
 import multiprocessing
 import os
@@ -11,7 +12,6 @@ import time
 import argparse
 import boto3
 import botocore.exceptions
-import datetime
 
 q = Queue.Queue()
 
