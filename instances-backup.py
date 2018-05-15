@@ -53,7 +53,7 @@ For example:
 
 
 def create_ami(conn, instance_id, ami_name, start, ami_desc=None):
-    logging.info('Started creating %s' % ami_name)
+    logging.info('Started creating image %s' % ami_name)
     try:
         request = conn.meta.client.create_image(
             Description=ami_desc or '',
@@ -117,7 +117,7 @@ def clean_up(conn, instance, region):
         if deleting:
             logging.info('De-registering %s image%s for %s' % (
                 len(deleting),
-                's' if len(deleting) == 1 else '',
+                's' if len(deleting) > 1 else '',
                 instance_name)
             )
             for ami in deleting:
