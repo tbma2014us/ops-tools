@@ -85,39 +85,43 @@ def create_ami(conn, instance_id, ami_name, start, ami_desc=None):
 
 
 def clean_ip(conn, instance, region):
-    instance_name = get_tag(instance.tags, 'Name')
-    filters = [{'Name': 'state', 'Values': ['available']},
-               {'Name': 'name', 'Values': ['%s_%s_*' % (
-                   instance_name,
-                   region
-               )]}]
-    images = list(conn.images.filter(Filters=filters))
-    logging.info('Found %s images for %s (%s) in %s' % (
-        len(images),
-        instance.id,
-        instance_name,
-        region
-    ))
-    current_week = datetime.datetime.utcnow().isocalendar()[1]
-    purgeable = sorted(images, key=lambda x: x.creation_date, reverse=True)[7:]
-    not_purgeable = get_all_used_amis(conn)
-    for ami in purgeable:
-        ami_creation_week = datetime.datetime.strptime(
-            ami.creation_date, '%Y-%m-%dT%H:%M:%S.%fZ').isocalendar()[1]
-        if ami_creation_week != current_week:
-            not_purgeable.append(ami)
-            current_week = ami_creation_week
-        if len(not_purgeable) >= 7:
-            break
-    deleting = [ami for ami in purgeable if ami not in not_purgeable]
-    if deleting:
-        logging.info('De-registering %s images for %s' % (
-            len(deleting),
-            instance_name)
-        )
-        for ami in deleting:
-            conn.meta.client.deregister_image(ImageId=ami.id)
-            time.sleep(15)
+    try:
+        instance_name = get_tag(instance.tags, 'Name')
+        filters = [{'Name': 'state', 'Values': ['available']},
+                   {'Name': 'name', 'Values': ['%s_%s_*' % (
+                       instance_name,
+                       region
+                   )]}]
+        images = list(conn.images.filter(Filters=filters))
+        logging.info('Found %s images for %s (%s) in %s' % (
+            len(images),
+            instance.id,
+            instance_name,
+            region
+        ))
+        current_week = datetime.datetime.utcnow().isocalendar()[1]
+        purgeable = sorted(images, key=lambda x: x.creation_date, reverse=True)[7:]
+        not_purgeable = get_all_used_amis(conn)
+        for ami in purgeable:
+            ami_creation_week = datetime.datetime.strptime(
+                ami.creation_date, '%Y-%m-%dT%H:%M:%S.%fZ').isocalendar()[1]
+            if ami_creation_week != current_week:
+                not_purgeable.append(ami)
+                current_week = ami_creation_week
+            if len(not_purgeable) >= 7:
+                break
+        deleting = [ami for ami in purgeable if ami not in not_purgeable]
+        if deleting:
+            logging.info('De-registering %s images for %s' % (
+                len(deleting),
+                instance_name)
+            )
+            for ami in deleting:
+                conn.meta.client.deregister_image(ImageId=ami.id)
+                time.sleep(15)
+    except (botocore.exceptions.ClientError,
+            botocore.exceptions.NoCredentialsError) as e:
+        logging.error(e)
 
 
 def worker(profile, region):
