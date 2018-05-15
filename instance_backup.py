@@ -101,7 +101,9 @@ def clean_up(conn, instance, region):
         ))
         current_week = datetime.datetime.utcnow().isocalendar()[1]
         purgeable = sorted(images, key=lambda x: x.creation_date, reverse=True)[7:]
-        not_purgeable = get_all_used_amis(conn)
+        used_amis = get_all_used_amis(conn)
+        not_purgeable = []
+
         for ami in purgeable:
             ami_creation_week = datetime.datetime.strptime(
                 ami.creation_date, '%Y-%m-%dT%H:%M:%S.%fZ').isocalendar()[1]
@@ -110,7 +112,9 @@ def clean_up(conn, instance, region):
                 current_week = ami_creation_week
             if len(not_purgeable) >= 7:
                 break
-        deleting = [ami for ami in purgeable if ami not in not_purgeable]
+        deleting = [ami for ami in purgeable if
+                    (ami not in not_purgeable) or (ami not in used_amis)]
+
         if deleting:
             logging.info('De-registering %s images for %s' % (
                 len(deleting),
