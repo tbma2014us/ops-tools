@@ -27,7 +27,10 @@ class ArgsParser(argparse.ArgumentParser):
         self.options = None
         self.epilog = '''
 Configure your AWS access using: IAM, ~root/.aws/credentials, ~root/.aws/config, /etc/boto.cfg,
-~root/.boto, or AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables
+~root/.boto, or AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables.
+
+For example:
+    instances-backup.py -i myinstance1,myinstance2,myinstance3
 '''
         self.options = None
         self.add_argument('-i', '--instances', dest='instances', help='EC2 instances to backup')
@@ -110,15 +113,14 @@ def clean_up(conn, instance, region):
                 current_week = ami_creation_week
             if len(not_purgeable) >= 7:
                 break
-        deleting = [ami for ami in purgeable if
-                    (ami not in not_purgeable) or (ami not in used_amis)]
-
+        deleting = list(set(purgeable) - set(not_purgeable) - set(used_amis))
         if deleting:
             logging.info('De-registering %s images for %s' % (
                 len(deleting),
                 instance_name)
             )
             for ami in deleting:
+                logging.info('De-registering %s (%s)' % (ami.name, ami.id))
                 conn.meta.client.deregister_image(ImageId=ami.id)
                 time.sleep(15)
     except (botocore.exceptions.ClientError,
