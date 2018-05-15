@@ -95,8 +95,8 @@ def clean_ip(conn, instance, region):
         images = list(conn.images.filter(Filters=filters))
         logging.info('Found %s images for %s (%s) in %s' % (
             len(images),
-            instance.id,
             instance_name,
+            instance.id,
             region
         ))
         current_week = datetime.datetime.utcnow().isocalendar()[1]
