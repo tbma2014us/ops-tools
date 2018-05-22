@@ -28,6 +28,8 @@ class ArgsParser(argparse.ArgumentParser):
 Configure your AWS access using: IAM, ~root/.aws/credentials, ~root/.aws/config, /etc/boto.cfg,
 ~root/.boto, or AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables.
 
+By default searches and backs-up EC2 instances with Backup=yes tag.
+
 For example:
     instances-backup.py -i myinstance1,myinstance2,myinstance3
 '''
