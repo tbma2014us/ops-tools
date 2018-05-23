@@ -183,7 +183,8 @@ def get_all_used_amis(conn):
 
 
 def sigterm_handler(*args):
-    logging.info("Exiting %s on signal %s" % (os.getpid(), args[0]))
+    sig_name = next(v for v, k in signal.__dict__.iteritems() if k == args[0])
+    logging.info('Exiting %s on %s' % (os.getpid(), sig_name))
     sys.exit(0)
 
 
