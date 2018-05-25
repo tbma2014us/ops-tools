@@ -18,7 +18,7 @@ A set of tools to work with AWS KMS encryption.
 Adds tags to AWS EC2 instances by name or instance id
 
 ## instances-backup.py
-Backs up AWS EC2 instances into AMIs by tag, instance id or name
+Multithreaded EC2 instances backup into AMIs by tag, instance id or name
 
 ## start-stop.py
 Starts or stops AWS EC2 instances by name or instance id
