@@ -1,4 +1,4 @@
-JOBS ?= 4
+JOBS ?= 1
 
 MAKEFLAGS += -r -j $(JOBS)
 
