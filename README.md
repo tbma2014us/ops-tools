@@ -1,4 +1,4 @@
-# python-tools
+# ops-tools
 DevOps tools written in Python
 1. [cloudwatch_metrics](cloudwatch_metrics/)
 2. [kms_encrypt](kms_encrypt/)
