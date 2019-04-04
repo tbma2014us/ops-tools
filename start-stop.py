@@ -17,8 +17,10 @@ class ArgsParser(argparse.ArgumentParser):
         argparse.ArgumentParser.__init__(self, *args, **kwargs)
         self.formatter_class = argparse.RawTextHelpFormatter
         self.options = None
-        self.epilog = '''For example\n start-stop.py stop name1 name2 name3
-                    '''
+        self.epilog = '''
+For example
+    {} stop name1 name2 name3
+'''.format(__file__)
         self.add_argument('-r', '--regions', dest='region', default='us-west-2', help='Region to connect')
         self.add_argument('-p', '--profile', dest='profile', help='Profile to use')
         self.add_argument('--dry-run', '--dry_run', dest='dry_run', action='store_true', default=False,

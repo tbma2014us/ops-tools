@@ -31,8 +31,8 @@ Configure your AWS access using: IAM, ~root/.aws/credentials, ~root/.aws/config,
 By default searches and backs-up EC2 instances with Backup=yes tag.
 
 For example:
-    instances-backup.py -i myinstance1,myinstance2,myinstance3
-'''
+    {} -i myinstance1,myinstance2,myinstance3
+'''.format(__file__)
         self.options = None
         self.add_argument('-i', '--instances', dest='instances', help='EC2 instances to backup')
         self.add_argument('-p', '--profile', dest='profile', help='AWS profile to use')

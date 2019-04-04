@@ -27,7 +27,10 @@ class ArgsParser(argparse.ArgumentParser):
             'but not more frequently than cooldown timeout.\n')
         argparse.ArgumentParser.__init__(self, *args, **kwargs)
         self.formatter_class = argparse.RawTextHelpFormatter
-        self.epilog = 'For example:\n watchdog.py -a 192.168.1.1 -p 80 -c "restart service"'
+        self.epilog = '''
+For example:
+    {} -a 192.168.1.1 -p 80 -c "restart service"
+'''.format(__file__)
         self.options = None
         self.add_argument('-a', '--address', dest='service_address', default='192.168.1.230')
         self.add_argument('-p', '--port', dest='service_port', type=int, default=22)
