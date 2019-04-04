@@ -17,8 +17,10 @@ class ArgsParser(argparse.ArgumentParser):
         argparse.ArgumentParser.__init__(self, *args, **kwargs)
         self.formatter_class = argparse.RawTextHelpFormatter
         self.options = None
-        self.epilog = '''For example\n add-tags.py name1 name2 name3 --tags tag1=a tag2=b tag3=c
-                    '''
+        self.epilog = '''
+For example:
+    {} name1 name2 name3 --tags tag1=a tag2=b tag3=c
+'''.format(__file__)
         self.add_argument('-r', '--regions', dest='region', default='us-west-2', help='Region to connect')
         self.add_argument('-p', '--profile', dest='profile', help='Profile to use')
         self.add_argument('--dry-run', dest='dry_run', action='store_true', default=False,
