@@ -5,7 +5,8 @@ DevOps tools written in Python
 3. [add-tags.py](#add-tagspy)
 4. [instances-backup.py](#instances-backuppy)
 5. [start-stop.py](#start-stoppy)
-6. [watchdog.py](#watchdogpy)
+6. [wait.py](#waitpy)
+7. [watchdog.py](#watchdogpy)
 
 
 ## cloudwatch_metrics
@@ -22,6 +23,10 @@ Multithreaded EC2 instances backup into AMIs by tag, instance id or name
 
 ## start-stop.py
 Starts or stops AWS EC2 instances by name or instance id
+
+## wait.py
+
+Wait for remote SSH service to come back after a boot or reboot
 
 ## watchdog.py
 TCP-port watchdog. Monitors availability of the TCP port, runs external process if port is unavailable.
