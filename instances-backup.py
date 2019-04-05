@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-import queue
+import argparse
 import datetime
 import logging
 import os
+import queue
 import signal
 import sys
 import threading
 import time
 
-import argparse
 import boto3
 import botocore.exceptions
 
