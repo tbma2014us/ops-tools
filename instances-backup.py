@@ -18,9 +18,7 @@ q = queue.Queue()
 # noinspection PyTypeChecker
 class ArgsParser(argparse.ArgumentParser):
     def __init__(self, *args, **kwargs):
-        kwargs.setdefault(
-            'description',
-            'Backs up EC2 instances into AMIs by tag or instance_id/name')
+        kwargs.setdefault('description', 'Backs up EC2 instances into AMIs by tag or instance_id/name')
         argparse.ArgumentParser.__init__(self, *args, **kwargs)
         self.formatter_class = argparse.RawTextHelpFormatter
         self.options = None
@@ -31,7 +29,7 @@ Configure your AWS access using: IAM, ~root/.aws/credentials, ~root/.aws/config,
 By default searches and backs-up EC2 instances with Backup=yes tag.
 
 For example:
-    {} -i myinstance1,myinstance2,myinstance3
+    {0} -i myinstance1,myinstance2,myinstance3
 '''.format(__file__)
         self.options = None
         self.add_argument('-i', '--instances', dest='instances', help='EC2 instances to backup')
@@ -83,8 +81,8 @@ def create_ami(conn, instance_id, ami_name, start, ami_desc=None):
             return False, image.image_id
 
     except (botocore.exceptions.ClientError,
-            botocore.exceptions.NoCredentialsError) as e:
-        logging.error(e)
+            botocore.exceptions.NoCredentialsError) as _:
+        logging.error(_)
         return False, None
 
 
@@ -129,8 +127,8 @@ def clean_up(conn, instance, region):
                 time.sleep(15)
 
     except (botocore.exceptions.ClientError,
-            botocore.exceptions.NoCredentialsError) as e:
-        logging.error(e)
+            botocore.exceptions.NoCredentialsError) as _:
+        logging.error(_)
 
 
 def worker(profile, region):
@@ -192,12 +190,12 @@ def main(args=sys.argv[1:]):
     my_parser = ArgsParser()
     options = my_parser.parse_args(args)
 
-    for m in ['boto3', 'botocore']:
-        not options.verbose and logging.getLogger(m).setLevel(logging.CRITICAL)
+    for _ in ['boto3', 'botocore']:
+        not options.verbose and logging.getLogger(_).setLevel(logging.CRITICAL)
 
-    for s in [signal.SIGINT, signal.SIGTERM]:
+    for _ in [signal.SIGINT, signal.SIGTERM]:
         # noinspection PyTypeChecker
-        signal.signal(s, sigterm_handler)
+        signal.signal(_, sigterm_handler)
 
     try:
         logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=options.log_format)
@@ -214,7 +212,7 @@ def main(args=sys.argv[1:]):
             instances = lookup(ec2, '', filters=[{'Name': 'tag:Backup', 'Values': ['yes']}])
 
         map(q.put, instances)
-        for t in range(4):
+        for _ in range(4):
             worker_thread = threading.Thread(target=worker, args=[options.profile, options.region])
             worker_thread.daemon = True
             worker_thread.start()
@@ -226,8 +224,8 @@ def main(args=sys.argv[1:]):
             time.sleep(1)
 
     except (botocore.exceptions.ClientError,
-            botocore.exceptions.NoCredentialsError) as e:
-        raise SystemExit(e)
+            botocore.exceptions.NoCredentialsError) as _:
+        raise SystemExit(_)
 
 
 if __name__ == '__main__':
