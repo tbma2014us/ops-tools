@@ -195,6 +195,7 @@ def main(args=sys.argv[1:]):
     options = my_parser.parse_args(args)
 
     for s in [signal.SIGINT, signal.SIGTERM]:
+        # noinspection PyTypeChecker
         signal.signal(s, sigterm_handler)
 
     for m in ['boto3', 'botocore']:

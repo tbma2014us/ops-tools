@@ -1,5 +1,5 @@
-#!/usr/bin/env python
-import Queue
+#!/usr/bin/env python3
+import queue
 import datetime
 import logging
 import os
@@ -12,7 +12,7 @@ import argparse
 import boto3
 import botocore.exceptions
 
-q = Queue.Queue()
+q = queue.Queue()
 
 
 # noinspection PyTypeChecker
@@ -196,6 +196,7 @@ def main(args=sys.argv[1:]):
         not options.verbose and logging.getLogger(m).setLevel(logging.CRITICAL)
 
     for s in [signal.SIGINT, signal.SIGTERM]:
+        # noinspection PyTypeChecker
         signal.signal(s, sigterm_handler)
 
     try:

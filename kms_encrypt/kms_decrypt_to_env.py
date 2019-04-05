@@ -97,7 +97,7 @@ class KmsDecryptEnv(object):
         for line in p.stdout:
             (key, _, value) = line.partition("=")
             if key in used_keys:
-                print line.strip()
+                print(line.strip())
 
 
 def main(args=sys.argv[1:]):

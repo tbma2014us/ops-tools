@@ -25,7 +25,7 @@ class ArgsParser(argparse.ArgumentParser):
         self.add_argument('-p', '--profile', dest='profile', help='AWS profile to use')
         self.add_argument('-r', '--region', dest='region', default='us-west-2', help='AWS region to connect')
         self.add_argument('-v', '--verbose', dest='verbose', action='store_true', default=False, help='Be verbose')
-        self.add_argument('in_file', help='Name of the unencrypted input file',)
+        self.add_argument('in_file', help='Name of the unencrypted input file', )
         self.add_argument('out_file', help='Name of the output file, will encrypt to .enc if not specified', nargs='?')
 
     def error(self, message):
@@ -67,15 +67,15 @@ class KmsEncrypt(object):
 
     def encrypt_file(self, key_alias, input_filename, output_filename):
         key_provider = self.build_kms_master_key_provider(key_alias)
-        with open(input_filename, 'rb') as infile,\
-                open(output_filename, 'wb') as outfile,\
+        with open(input_filename, 'rb') as infile, \
+                open(output_filename, 'wb') as outfile, \
                 aws_encryption_sdk.stream(
                     mode='e',
                     source=infile,
                     key_provider=key_provider
                 ) as encryptor:
-                    for chunk in encryptor:
-                        outfile.write(chunk)
+            for chunk in encryptor:
+                outfile.write(chunk)
 
 
 def main(args=sys.argv[1:]):

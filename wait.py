@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import argparse
 import errno
 import logging
@@ -59,9 +59,6 @@ def wait_for_ssh_to_be_ready(host, port, timeout, retry_interval):
                 timeout=1
             )
         except paramiko.ssh_exception.SSHException as _:
-            if _.message == 'Error reading SSH protocol banner':
-                logging.info(_)
-                continue
             logging.info('SSH transport is available!')
             break
         except paramiko.ssh_exception.NoValidConnectionsError as _:

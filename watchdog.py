@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
     Monitors the availability of the TCP port, runs external process if port is unavailable,
     but not more frequently than cooldown timeout. Persistent information is stored in /tmp
@@ -85,32 +85,32 @@ def main(args=sys.argv[1:]):
         logging.info('Starting watchdog run')
         with contextlib.closing(shelve.open(os.path.join(tempfile.gettempdir(), options.name), 'c')) as shelf, \
                 contextlib.closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as sock:
-                sock.settimeout(5)
-                connect_errors = None
-                executed = shelf.get(options.name)
-                for _ in range(0, random.randint(3, 5)):
-                    connect_errors = sock.connect_ex(
-                        (options.service_address, options.service_port))
-                    if not connect_errors:
-                        break
-                    else:
-                        logging.info('Trying to connect to %s:%s' % (
-                            options.service_address, options.service_port))
-                        time.sleep(options.seconds)
+            sock.settimeout(5)
+            connect_errors = None
+            executed = shelf.get(options.name)
+            for _ in range(0, random.randint(3, 5)):
+                connect_errors = sock.connect_ex(
+                    (options.service_address, options.service_port))
+                if not connect_errors:
+                    break
                 else:
-                    logging.info('Cannot connect to %s:%s, issuing exec' %
-                                 (options.service_address, options.service_port))
-                if connect_errors and not executed:
+                    logging.info('Trying to connect to %s:%s' % (
+                        options.service_address, options.service_port))
+                    time.sleep(options.seconds)
+            else:
+                logging.info('Cannot connect to %s:%s, issuing exec' %
+                             (options.service_address, options.service_port))
+            if connect_errors and not executed:
+                shelf[options.name] = execute(options.command)
+            elif connect_errors and executed:
+                if datetime.datetime.now() - executed >= options.command_cooldown:
                     shelf[options.name] = execute(options.command)
-                elif connect_errors and executed:
-                    if datetime.datetime.now() - executed >= options.command_cooldown:
-                        shelf[options.name] = execute(options.command)
-                    else:
-                        next_run = (executed + options.command_cooldown).strftime('%Y-%m-%d %H:%M:%S')
-                        logging.info('Watchdog exec cooldown is in effect until %s' % next_run)
                 else:
-                    logging.info('%s:%s OK' % (options.service_address, options.service_port))
-                    shelf.clear()
+                    next_run = (executed + options.command_cooldown).strftime('%Y-%m-%d %H:%M:%S')
+                    logging.info('Watchdog exec cooldown is in effect until %s' % next_run)
+            else:
+                logging.info('%s:%s OK' % (options.service_address, options.service_port))
+                shelf.clear()
     except KeyboardInterrupt:
         sys.exit(0)
 
