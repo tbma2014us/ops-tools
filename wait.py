@@ -24,8 +24,8 @@ class ArgsParser(argparse.ArgumentParser):
         self.epilog = '''
 For example:
   {0} 192.168.1.1
-  {0} 192.168.1.1 22 1 -t 80 -r 1
-  {0} 192.168.1.1 22 1 --timeout 80 --retry-interval 1
+  {0} 192.168.1.1 22 -t 80 -r 1
+  {0} 192.168.1.1 22 --timeout 80 --retry-interval 1
 '''.format(__file__)
         self.add_argument('host', help='remote hostname or IP address to connect')
         self.add_argument('port', help='SSH port', nargs="?", default="22")
