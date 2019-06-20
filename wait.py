@@ -21,19 +21,19 @@ class ArgsParser(argparse.ArgumentParser):
         argparse.ArgumentParser.__init__(self, *args, **kwargs)
         self.formatter_class = argparse.RawTextHelpFormatter
         self.options = None
-        self.epilog = '''
+        self.epilog = f'''
 For example:
-  {0} 192.168.1.1
-  {0} 192.168.1.1 22 -t 80 -r 1
-  {0} 192.168.1.1 22 --timeout 80 --retry-interval 1
-'''.format(__file__)
+  {__file__} 192.168.1.1
+  {__file__} 192.168.1.1 22 -t 80 -r 1
+  {__file__} 192.168.1.1 22 --timeout 80 --retry-interval 1
+'''
         self.add_argument('host', help='remote hostname or IP address to connect')
         self.add_argument('port', help='SSH port', nargs="?", default="22")
         self.add_argument('-t', '--timeout', help='timeout in seconds', nargs="?", default="180")
         self.add_argument('-r', '--retry_interval', '--retry-interval', help='retry interval', nargs="?", default="1")
 
     def error(self, message):
-        sys.stderr.write('Error: %s\n' % message)
+        sys.stderr.write(f'Error: {message}\n\n')
         self.print_help()
         sys.exit(errno.EINVAL)
 
