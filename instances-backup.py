@@ -3,7 +3,6 @@ import argparse
 import datetime
 import logging
 import os
-import queue
 import signal
 import sys
 import threading
@@ -11,6 +10,11 @@ import time
 
 import boto3
 import botocore.exceptions
+
+try:
+    import Queue as queue
+except ImportError:
+    import queue
 
 q = queue.Queue()
 
@@ -180,7 +184,7 @@ def get_all_used_amis(conn):
 
 
 def sigterm_handler(*args):
-    sig_name = next(v for v, k in signal.__dict__.iteritems() if k == args[0])
+    sig_name = next(v for v, k in signal.__dict__.items() if k == args[0])
     logging.info('Exiting %s on %s' % (os.getpid(), sig_name))
     sys.exit(0)
 
