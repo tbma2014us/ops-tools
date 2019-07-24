@@ -12,7 +12,7 @@ Runs as a service on Ubuntu instance. Every 5 minutes posts custom metrics into 
 
 ## Make
 
-Install prerequisites
+Install build prerequisites
 ```bash
 sudo apt-get -qy install python-pip python-dev build-essential virtualenv
 ```
