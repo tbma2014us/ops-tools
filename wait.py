@@ -10,6 +10,14 @@ import warnings
 import cryptography.utils
 import paramiko
 
+# To fix issues with libcrypto.dylib loading after updating to Max OS X Catalina
+# Run:
+# brew update & brew upgrade & brew install openssl
+# cd /usr/local/Cellar/openssl/1.0.2t/
+# sudo cp libssl.1.0.0.dylib libcrypto.1.0.0.dylib /usr/local/lib/
+# sudo ln -s libssl.1.0.0.dylib libssl.dylib
+# sudo ln -s libcrypto.1.0.0.dylib libcrypto.dylib
+
 # silence EllipticCurvePublicNumbers deprecation warnings
 warnings.simplefilter("ignore", cryptography.utils.CryptographyDeprecationWarning)
 
