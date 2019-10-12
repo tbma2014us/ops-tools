@@ -10,7 +10,7 @@ import warnings
 import cryptography.utils
 import paramiko
 
-# To fix issues with libcrypto.dylib loading after updating to Max OS X Catalina
+# To fix issues with libcrypto.dylib loading after updating to MacOS X Catalina
 # Run:
 # brew update & brew upgrade & brew install openssl
 # cd /usr/local/Cellar/openssl/1.0.2t/
