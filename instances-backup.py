@@ -214,7 +214,9 @@ def main(args=sys.argv[1:]):
         else:
             instances = lookup(ec2, '', filters=[{'Name': 'tag:Backup', 'Values': ['yes']}])
 
-        map(q.put, instances)
+        for _ in instances:
+            q.put(_)
+
         for _ in range(4):
             worker_thread = threading.Thread(target=worker, args=[options.profile, options.region])
             worker_thread.daemon = True
