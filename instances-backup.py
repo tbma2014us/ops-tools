@@ -11,7 +11,9 @@ import time
 import boto3
 import botocore.exceptions
 
+
 try:
+    # noinspection PyPep8Naming
     import Queue as queue
 except ImportError:
     import queue
