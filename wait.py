@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 import argparse
 import errno
 import logging
@@ -15,6 +15,7 @@ import paramiko
 # brew update & brew upgrade & brew install openssl
 # cd /usr/local/Cellar/openssl/1.0.2t/
 # sudo cp libssl.1.0.0.dylib libcrypto.1.0.0.dylib /usr/local/lib/
+# cd /usr/local/lib/
 # sudo ln -s libssl.1.0.0.dylib libssl.dylib
 # sudo ln -s libcrypto.1.0.0.dylib libcrypto.dylib
 

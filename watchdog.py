@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
     Monitors the availability of the TCP port, runs external process if port is unavailable,
     but not more frequently than cooldown timeout. Persistent information is stored in /tmp
@@ -16,6 +16,9 @@ import subprocess
 import sys
 import tempfile
 import time
+
+
+logger = logging.getLogger()
 
 
 # noinspection PyTypeChecker
