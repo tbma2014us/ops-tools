@@ -33,11 +33,11 @@ Configure your AWS access using: IAM, ~root/.aws/credentials, ~root/.aws/config,
 By default searches and backs-up EC2 instances with Backup=yes tag.
 
 For example:
-    {0} -i myinstance1,myinstance2,myinstance3
+    {0} -r us-east-1 -i myinstance1,myinstance2,myinstance3
 '''.format(__file__)
         self.add_argument('-i', '--instances', dest='instances', help='EC2 instances to backup')
         self.add_argument('-p', '--profile', dest='profile', help='AWS profile to use')
-        self.add_argument('-r', '--region', dest='region', default='us-west-2', help='AWS region to connect')
+        self.add_argument('-r', '--region', dest='region', required='true', help='AWS region to connect')
         self.add_argument('-v', '--verbose', dest='verbose', action='store_true', default=False, help='Be verbose')
 
     def error(self, message):
