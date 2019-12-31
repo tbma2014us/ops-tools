@@ -78,9 +78,9 @@ def start_logging(_log_format):
     return _logger
 
 
-def main(args=sys.argv[1:]):
-    myparser = ArgsParser()
-    options = myparser.parse_args(args)
+def main():
+    my_parser = ArgsParser()
+    options = my_parser.parse_args(sys.argv[1:])
     global logger
     logger = start_logging(options.log_format)
 
