@@ -191,9 +191,10 @@ def sigterm_handler(*args):
     sys.exit(0)
 
 
-def main():
+def main(args=None):
+    args = args or sys.argv[1:]
     my_parser = ArgsParser()
-    options = my_parser.parse_args(sys.argv[1:])
+    options = my_parser.parse_args(args)
 
     for _ in ['boto3', 'botocore']:
         not options.verbose and logging.getLogger(_).setLevel(logging.CRITICAL)

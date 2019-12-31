@@ -83,9 +83,10 @@ def wait_for_ssh_to_be_ready(host, port, timeout, retry_interval):
         sys.exit(errno.ETIME)
 
 
-def main():
+def main(args=None):
+    args = args or sys.argv[1:]
     my_parser = ArgsParser()
-    options = my_parser.parse_args(sys.argv[1:])
+    options = my_parser.parse_args(args)
     logging.basicConfig(
         stream=sys.stdout,
         level=logging.INFO,

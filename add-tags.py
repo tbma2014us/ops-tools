@@ -53,9 +53,10 @@ def lookup(conn, host):
     return [i.id for i in instances]
 
 
-def main():
+def main(args=None):
+    args = args or sys.argv[1:]
     my_parser = ArgsParser()
-    options = my_parser.parse_args(sys.argv[1:])
+    options = my_parser.parse_args(args)
     logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=LOG_FORMAT)
 
     for m in ['boto3', 'botocore']:
