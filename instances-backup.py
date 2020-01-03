@@ -56,7 +56,8 @@ For example:
         return options
 
 
-def create_ami(conn, instance_id, ami_name, start, ami_desc=None):
+def create_ami(my_session, instance_id, ami_name, start, ami_desc=None):
+    conn = my_session.resource('ec2')
     logging.info('Started creating image %s' % ami_name)
     try:
         request = conn.meta.client.create_image(
@@ -91,7 +92,8 @@ def create_ami(conn, instance_id, ami_name, start, ami_desc=None):
         return False, None
 
 
-def clean_up(conn, instance, region):
+def clean_up(my_session, instance, region):
+    conn = my_session.resource('ec2')
     try:
         instance_name = get_tag(instance.tags, 'Name')
         images = list(conn.images.filter(Filters=[
@@ -107,7 +109,7 @@ def clean_up(conn, instance, region):
 
         current_week = datetime.datetime.utcnow().isocalendar()[1]
         purgeable = sorted(images, key=lambda x: x.creation_date, reverse=True)[7:]
-        used_amis = get_all_used_amis(conn)
+        used_amis = get_all_used_amis(my_session)
         not_purgeable = []
 
         for ami in purgeable:
@@ -153,9 +155,9 @@ def worker(profile, region):
                 now.minute,
             ),
         )
-        success, image_id = create_ami(session.resource('ec2'), instance.id, ami_name, now)
+        success, image_id = create_ami(session, instance.id, ami_name, now)
         if success and image_id:
-            clean_up(session.resource('ec2'), instance, session.region_name)
+            clean_up(session, instance, session.region_name)
         q.task_done()
 
 
@@ -180,8 +182,13 @@ def lookup(conn, host, filters=None):
     return [i.id for i in instances]
 
 
-def get_all_used_amis(conn):
+def get_all_used_amis(my_session):
+    conn = my_session.resource('ec2')
     used_amis = [instance.image_id for instance in list(conn.instances.filter())]
+
+    auto_scaling = my_session.client('autoscaling')
+    launch_configs = auto_scaling.describe_launch_configurations()
+    used_amis.extend([lc.get('ImageId') for lc in launch_configs['LaunchConfigurations']])
     return list(set(used_amis))
 
 
