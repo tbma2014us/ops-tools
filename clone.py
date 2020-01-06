@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 from __future__ import print_function
 
 import argparse
@@ -9,13 +9,7 @@ import pprint
 import signal
 import sys
 import time
-from datetime import datetime, timedelta
-
-try:
-    from datetime import timezone
-except ImportError:
-    timezone = None
-    import calendar
+from datetime import datetime, timedelta, timezone
 
 import boto3
 import botocore.exceptions
@@ -309,13 +303,7 @@ class Clone(object):
 
     @staticmethod
     def to_local_tz(utc_dt):
-        if timezone is not None:
-            return utc_dt.replace(tzinfo=timezone.utc).astimezone(tz=None)
-        else:
-            timestamp = calendar.timegm(utc_dt.timetuple())
-            local_dt = datetime.fromtimestamp(timestamp)
-            assert utc_dt.resolution >= timedelta(microseconds=1)
-            return local_dt.replace(microsecond=utc_dt.microsecond)
+        return utc_dt.replace(tzinfo=timezone.utc).astimezone(tz=None)
 
 
 def sigterm_handler(*args):
