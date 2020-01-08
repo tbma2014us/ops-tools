@@ -40,7 +40,7 @@ For example:
         self.add_argument(
             '--security-group-ids', '--security_group_ids', dest='security_group_ids', help='Security group ids')
         self.add_argument('--subnet-id', '--subnet_id', dest='subnet_id', help='Subnet id')
-        self.add_argument('--user-data', '--user_data', dest='user_data', help='User data script')
+        self.add_argument('--user-data', '--user_data', dest='user_data', help='TODO: Userdata script file')
         self.add_argument('-v', '--verbose', dest='verbose', action='store_true', default=False, help="Be verbose")
         self.add_argument('--dry_run', '--dry-run', dest='dry_run', action='store_true', default=False,
                           help="Don't actually do anything; just print out what would be done")
@@ -69,6 +69,10 @@ class Clone(object):
         self.ec2_res = self.session.resource('ec2')
         self.ec2 = self.session.client('ec2')
         self.rds = self.session.client('rds')
+        
+    def load_user_data(self):
+        # TODO: load user data from the file
+        pass
 
     def ec2_lookup(self, host):
         try:
