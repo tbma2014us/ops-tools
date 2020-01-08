@@ -28,7 +28,7 @@ Creates a copy of the running AWS instance''')
         self.formatter_class = argparse.RawTextHelpFormatter
         self.epilog = '''
 For example: 
-    %s myinstance''' % __file__
+    %s ---region us-east-1 myinstance''' % __file__
         self.add_argument('-p', '--profile', dest='profile', help='AWS profile to use')
         self.add_argument(
             '-r', '--region', dest='region', help='AWS region to connect', required=True)
@@ -169,7 +169,7 @@ class Clone(object):
             logging.info('Found ec2 instance "%s"' % name)
             if not instance_backup:
                 latest, instance_backup = self.find_latest_ec2_snapshot(name)
-                assert instance_backup, "Image is required"
+                assert instance_backup, "Image is required. Use instances-backup.py to create one"
         else:
             rds_instance = self.rds_lookup(name)
             if rds_instance:
