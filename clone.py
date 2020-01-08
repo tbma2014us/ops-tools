@@ -28,7 +28,7 @@ Creates a copy of the running AWS instance''')
         self.formatter_class = argparse.RawTextHelpFormatter
         self.epilog = '''
 For example: 
-    %s ---region us-east-1 myinstance''' % __file__
+    %s --region us-east-1 myinstance''' % __file__
         self.add_argument('-p', '--profile', dest='profile', help='AWS profile to use')
         self.add_argument(
             '-r', '--region', dest='region', help='AWS region to connect', required=True)
