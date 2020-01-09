@@ -27,6 +27,11 @@ Creates a copy of the running AWS instance''')
         self.options = None
         self.formatter_class = argparse.RawTextHelpFormatter
         self.epilog = '''
+Configure your AWS access using: IAM, ~root/.aws/credentials, ~root/.aws/config, /etc/boto.cfg,
+~root/.boto, or AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables.
+
+Clones running AWS instance.
+
 For example: 
     %s --region us-east-1 myinstance''' % __file__
         self.add_argument('-p', '--profile', dest='profile', help='AWS profile to use')
