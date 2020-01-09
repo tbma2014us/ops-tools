@@ -40,7 +40,7 @@ For example:
         self.add_argument('name', help='Name of the EC2 or RDS instance')
         self.add_argument('--new-name', '--new_name', dest='new_name', help='Give clone that name')
         self.add_argument('--instance-type', '--instance_type', dest='instance_type', help='Instance Type'),
-        self.add_argument('--image-id', '--image_id', dest='image_id', help='Instance Type'),
+        self.add_argument('--image-id', '--image_id', dest='image_id', help='Image Id to use instead of the latest'),
         self.add_argument('--key-name', '--key_name', dest='key_name', help='Key name')
         self.add_argument(
             '--security-group-ids', '--security_group_ids', dest='security_group_ids', help='Security group ids')
