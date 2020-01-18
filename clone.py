@@ -3,6 +3,7 @@ import argparse
 import datetime
 import logging
 import os
+import pathlib
 import signal
 import sys
 import time
@@ -62,6 +63,9 @@ For example:
                 options.security_group_ids = options.security_group_ids.split(',')
             else:
                 options.security_group_ids = [options.security_group_ids]
+        if options.user_data:
+            _ = pathlib.Path(options.user_data)
+            options.user_data = _.read_text()
         self.options = options
         return options
 
