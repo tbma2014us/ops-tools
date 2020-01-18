@@ -65,6 +65,8 @@ For example:
                 options.security_group_ids = [options.security_group_ids]
         if options.user_data:
             _ = pathlib.Path(options.user_data)
+            if not _.exists():
+                exit("%s does not exist" % options.user_data)
             options.user_data = _.read_text()
         self.options = options
         return options
