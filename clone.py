@@ -3,7 +3,6 @@ import argparse
 import datetime
 import logging
 import os
-import pprint
 import signal
 import sys
 import time
@@ -74,10 +73,6 @@ class Clone(object):
         self.ec2_res = self.session.resource('ec2')
         self.ec2 = self.session.client('ec2')
         self.rds = self.session.client('rds')
-        
-    def load_user_data(self):
-        # TODO: load user data from the file
-        pass
 
     def ec2_lookup(self, host):
         try:
@@ -200,6 +195,8 @@ class Clone(object):
 
                 ec2_instance = self.ec2_res.Instance(ec2_instance)
                 instance_type = self.options.instance_type or ec2_instance.instance_type
+                user_data = self.options.user_data or USER_DATA
+                assert user_data.startswith("#"), "Bad user_data format"
                 tags = ec2_instance.tags
                 for _ in tags:
                     if _['Key'] == 'Name':
@@ -220,7 +217,7 @@ class Clone(object):
                         {'ResourceType': 'volume', 'Tags': [
                             {'Key': 'Name', 'Value': "vol-%s" % new_name}]},
                     ],
-                    UserData=self.options.user_data or USER_DATA,
+                    UserData=user_data,
                     DryRun=self.options.dry_run,
                 )
 
@@ -293,7 +290,7 @@ class Clone(object):
 
                 _ = self.wait_until_rds_available(start, rds_name)
                 logging.info('Parameters for %s is %s' % (
-                    rds_name, pprint.pformat(_['DBParameterGroups'][0]['ParameterApplyStatus'])))
+                    rds_name, _['DBParameterGroups'][0]['ParameterApplyStatus']))
                 logging.info('"%s" is available' % rds_name)
                 return rds_name
             except botocore.exceptions.ClientError as _:
