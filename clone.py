@@ -185,7 +185,6 @@ class Clone(object):
                 latest, instance_backup = self.find_latest_rds_snapshot(name)
                 assert instance_backup, "Error: Image is required"
 
-
         if ec2_instance:
             try:
                 start = datetime.now()
