@@ -66,7 +66,8 @@ For example:
         if options.user_data:
             _ = pathlib.Path(options.user_data)
             if not _.exists():
-                exit("%s does not exist" % _.resolve())
+                sys.stderr.write('Error: "%s" does not exist\n' % _.resolve())
+                exit(2)
             options.user_data = _.read_text()
         self.options = options
         return options
