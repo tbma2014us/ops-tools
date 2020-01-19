@@ -176,16 +176,15 @@ class Clone(object):
             logging.info('Found ec2 instance "%s"' % name)
             if not instance_backup:
                 latest, instance_backup = self.find_latest_ec2_snapshot(name)
-                assert instance_backup, "Image is required. Use instances-backup.py to create one"
+                assert instance_backup, "Error: Image is required. Use instances-backup.py to create one"
         else:
             rds_instance = self.rds_lookup(name)
-            if rds_instance:
-                logging.info('Found rds instance "%s"' % name)
-                if not instance_backup:
-                    latest, instance_backup = self.find_latest_rds_snapshot(name)
-                    assert instance_backup, "Image is required"
-            else:
-                raise SystemExit('Cannot find "%s"' % name)
+            assert rds_instance, 'Error: Cannot find "%s"' % name
+            logging.info('Found rds instance "%s"' % name)
+            if not instance_backup:
+                latest, instance_backup = self.find_latest_rds_snapshot(name)
+                assert instance_backup, "Error: Image is required"
+
 
         if ec2_instance:
             try:
@@ -203,7 +202,7 @@ class Clone(object):
                 ec2_instance = self.ec2_res.Instance(ec2_instance)
                 instance_type = self.options.instance_type or ec2_instance.instance_type
                 user_data = self.options.user_data or USER_DATA
-                assert user_data.startswith("#"), "Bad user_data format"
+                assert user_data.startswith("#"), "Error: Bad user_data format"
                 tags = ec2_instance.tags
                 for _ in tags:
                     if _['Key'] == 'Name':
