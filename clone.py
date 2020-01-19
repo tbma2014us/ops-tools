@@ -101,7 +101,7 @@ class Clone(object):
             databases = self.rds.describe_db_instances(DBInstanceIdentifier=host)
             return databases.get('DBInstances')[0]
         except (botocore.exceptions.ClientError, IndexError):
-            raise SystemExit('Cannot find "%s"' % host)
+            return 
 
     def find_latest_ec2_snapshot(self, name):
         try:
