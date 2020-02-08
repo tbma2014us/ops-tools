@@ -295,8 +295,8 @@ class Clone(object):
                 logging.info('Parameters for %s is %s' % (
                     rds_name, _['DBParameterGroups'][0]['ParameterApplyStatus']))
                 logging.info('"%s:%s" is available' % (
-                    instance['Endpoint']['Address'],
-                    instance['Endpoint']['Port']
+                    instance['DBInstance']['Endpoint']['Address'],
+                    instance['DBInstance']['Endpoint']['Port']
                 ))
                 return rds_name
             except botocore.exceptions.ClientError as _:
