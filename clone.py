@@ -294,7 +294,10 @@ class Clone(object):
                 _ = self.wait_until_rds_available(start, rds_name)
                 logging.info('Parameters for %s is %s' % (
                     rds_name, _['DBParameterGroups'][0]['ParameterApplyStatus']))
-                logging.info('"%s" is available' % rds_name)
+                logging.info('"%s:%s" is available' % (
+                    instance['Endpoint']['Address'],
+                    instance['Endpoint']['Port']
+                ))
                 return rds_name
             except botocore.exceptions.ClientError as _:
                 logging.error(_)
