@@ -20,7 +20,7 @@ A set of tools to work with AWS KMS encryption.
 Adds tags to AWS EC2 instances by name or instance id
 
 ## clone.py
-Creates a copy of the running AWS instance by name or instance id
+Creates a copy of the running AWS EC2 or RDS instance by name or instance id
 
 ## instances-backup.py
 Multi-threaded AWS EC2 instances backup into AMIs by tag, instance id or name
