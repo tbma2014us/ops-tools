@@ -257,7 +257,7 @@ class Clone(object):
                     LicenseModel=rds_instance['LicenseModel'],
                     MultiAZ=False,
                     OptionGroupName=rds_instance['OptionGroupMemberships'][0]['OptionGroupName'],
-                    PubliclyAccessible=False,
+                    PubliclyAccessible=rds_instance['PubliclyAccessible'],
                     StorageType=rds_instance['StorageType'],
                 )
                 # tags = self.rds.list_tags_for_resource(
