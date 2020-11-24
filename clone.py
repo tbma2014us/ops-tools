@@ -25,6 +25,7 @@ class ArgsParser(argparse.ArgumentParser):
 Creates a copy of the running AWS instance''')
         argparse.ArgumentParser.__init__(self, *args, **kwargs)
         self.options = None
+        # noinspection PyTypeChecker
         self.formatter_class = argparse.RawTextHelpFormatter
         self.epilog = '''
 Configure your AWS access using: IAM, ~root/.aws/credentials, ~root/.aws/config, /etc/boto.cfg,
@@ -207,7 +208,8 @@ class Clone(object):
 
                 instance = self.ec2.run_instances(
                     EbsOptimized=False if instance_type.startswith('t2') else True,
-                    IamInstanceProfile=ec2_instance.iam_instance_profile or {},
+                    IamInstanceProfile={'Arn': ec2_instance.iam_instance_profile.get('Arn')} if
+                    ec2_instance.iam_instance_profile else {},
                     ImageId=instance_backup['ImageId'],
                     InstanceType=instance_type,
                     KeyName=self.options.key_name or ec2_instance.key_name,
