@@ -37,3 +37,6 @@ TCP-port watchdog. Monitors availability of the TCP port, runs external process 
 ```bash
 ./watchdog.py -a 192.168.1.1 -p 80 -c "echo port unavailable" -r 1
 ```
+
+
+[![APACHE 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg?longCache=true&style=for-the-badge)](LICENSE)
