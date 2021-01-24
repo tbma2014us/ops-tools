@@ -39,4 +39,4 @@ TCP-port watchdog. Monitors availability of the TCP port, runs external process 
 ```
 
 
-[![APACHE 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg?longCache=true&style=for-the-badge)](LICENSE)
+[![APACHE 2.0](https://img.shields.io/badge/License-Apache%202.0-brightgreen.svg?longCache=true&style=for-the-badge)](LICENSE)
