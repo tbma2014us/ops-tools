@@ -4,3 +4,14 @@
 .idea/
 build/
 venv/
+*.pyc
+venv/
+.idea/
+build/
+dist/
+*.log
+*.tmp
+__pycache__/
+.cache/
+.DS_Store
+Thumbs.db
