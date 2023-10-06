@@ -1,7 +1,0 @@
-argparse
-aws_encryption_sdk
-boto3
-botocore
-kms_decrypt_to_env
-pyOpenSSL
-requests
