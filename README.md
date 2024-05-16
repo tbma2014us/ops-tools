@@ -36,3 +36,5 @@ TCP-port watchdog. Monitors availability of the TCP port, runs external process 
 
 
 [![APACHE 2.0](https://img.shields.io/badge/License-Apache%202.0-brightgreen.svg?longCache=true&style=for-the-badge)](LICENSE)
+[![python](https://img.shields.io/badge/Python-3.6-3776AB.svg?logo=python&logoColor=white&longCache=true&style=for-the-badge)](https://www.python.org)
+[![!#/bin/bash](https://img.shields.io/badge/-%23!%2Fbin%2Fbash-1f425f.svg?longCache=true&style=for-the-badge)](https://www.gnu.org/software/bash/)
