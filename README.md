@@ -23,9 +23,9 @@ Creates a clone of the running AWS EC2 or RDS instance by name or instance id
 Multithreading AWS EC2 instances backup into AMIs by tag, instance id or name
 
 ## rotate.py
-Rotates the expiring AWS keys and writes it into the localconfig files
+Rotates the expiring AWS keys and writes them into the local config files."
 
-## start-stop.py
+## start-stop.p
 Starts or stops AWS EC2 instances by name or instance id
 
 ## wait.py
