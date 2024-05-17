@@ -4,6 +4,7 @@ DevOps tools written in Python
 2. [add-tags.py](#add-tagspy)
 3. [clone.py](#clonepy)
 4. [instances-backup.py](#instances-backuppy)
+5. [rotate.py](#rotate)
 5. [start-stop.py](#start-stoppy)
 6. [wait.py](#waitpy)
 7. [watchdog.py](#watchdogpy)
@@ -19,7 +20,10 @@ Adds tags to AWS EC2 instances by name or instance id
 Creates a clone of the running AWS EC2 or RDS instance by name or instance id
 
 ## instances-backup.py
-Multi-threaded AWS EC2 instances backup into AMIs by tag, instance id or name
+Multithreading AWS EC2 instances backup into AMIs by tag, instance id or name
+
+## rotate.py
+Rotates the expiring AWS keys and writes it into the localconfig files
 
 ## start-stop.py
 Starts or stops AWS EC2 instances by name or instance id
