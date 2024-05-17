@@ -23,7 +23,7 @@ Creates a running copy of the AWS computing or database instance by name or `ins
 Multithreading AWS EC2 instances backup into AMIs by tag, instance id or name
 
 ## rotate.py
-Rotates the expiring AWS keys and writes them into the local config files.
+Rotates the expiring AWS keys and writes the updated keys into the local config files.
 
 ## start-stop.py
 Starts or stops AWS EC2 instances by name or instance id
