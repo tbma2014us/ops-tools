@@ -12,7 +12,7 @@ from pathlib import Path
 
 default_expiry_threshold_days = 7
 default_log_format = '[%(levelname)s] (%(filename)s:%(threadName)s:%(lineno)s) %(message)s'
-default_verbose = True
+default_verbose = False
 
 
 class AWSKey:
