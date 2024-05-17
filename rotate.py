@@ -3,6 +3,7 @@ import boto3
 import botocore.exceptions
 import configparser
 import logging
+import os
 import shutil
 import signal
 import sys
