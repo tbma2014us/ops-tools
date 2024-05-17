@@ -17,7 +17,7 @@ Service daemon for Ubuntu servers to post custom AWS CloudWatch metrics.
 Adds tags to AWS EC2 instances by name or instance id
 
 ## clone.py
-Creates a clone of the running AWS EC2 or RDS instance by name or instance id
+Creates a running copy of the AWS computing or database instance by name or `instance_id`
 
 ## instances-backup.py
 Multithreading AWS EC2 instances backup into AMIs by tag, instance id or name
