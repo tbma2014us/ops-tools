@@ -83,18 +83,18 @@ class AWSKey:
             if self.key_is_expiring_soon(access_key):
                 if not backed_up:
                     self.backup_credentials_file()
-                    print(f"Backup of the credentials file created at {self.backup_file}")
+                    logging.info(f"Backup of the credentials file created at {self.backup_file}")
                     backed_up = True
-                print(f"Access key {access_key['AccessKeyId']} is expiring soon.")
+                logging.info(f"Access key {access_key['AccessKeyId']} is expiring soon.")
 
                 new_access_key = self.create_new_access_key()
-                print(f"Created new access key: {new_access_key['AccessKeyId']}")
+                logging.info(f"Created new access key: {new_access_key['AccessKeyId']}")
 
                 self.update_credentials_file(new_access_key)
-                print("Updated ~/.aws/credentials with new access key.")
+                logging.info("Updated ~/.aws/credentials with new access key.")
 
                 self.delete_access_key(access_key['AccessKeyId'])
-                print(f"Deleted old access key: {access_key['AccessKeyId']}")
+                logging.info(f"Deleted old access key: {access_key['AccessKeyId']}")
 
 
 # noinspection PyTypeChecker,PyUnusedLocal
