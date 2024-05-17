@@ -10,7 +10,7 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-default_expiry_threshold_days = 7
+default_expiry_threshold_days = 30-7
 default_log_format = '[%(levelname)s] (%(filename)s:%(threadName)s:%(lineno)s) %(message)s'
 default_verbose = False
 
@@ -115,7 +115,7 @@ if __name__ == "__main__":
 
     try:
         logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=default_log_format)
-        aws_key_manager = AWSKey(expiry_threshold_days=7)
+        aws_key_manager = AWSKey()
         aws_key_manager.replace_expiring_keys()
 
     except botocore.exceptions.ClientError as _:
