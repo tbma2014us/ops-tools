@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import argparse
 import boto3
 import botocore.exceptions
 import configparser
@@ -10,15 +11,15 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-DEFAULT_EXPIRY_THRESHOLD_DAYS = 30-7
+DEFAULT_EXPIRY_THRESHOLD_DAYS = 30 - 7
 DEFAULT_LOG_FORMAT = '[%(levelname)s] (%(filename)s:%(threadName)s:%(lineno)s) %(message)s'
-default_verbose = False
 
 
 class AWSKey:
     def __init__(self, expiry_threshold_days=None, credentials_file='~/.aws/credentials',
-                 backup_file='~/.aws/credentials.old'):
+                 backup_file='~/.aws/credentials.old', options=None):
         self.backed_up = False
+        self.options = options
         self.expiry_threshold_days = expiry_threshold_days or DEFAULT_EXPIRY_THRESHOLD_DAYS
         self.session = boto3.Session()
         self.credentials_file = Path(credentials_file).expanduser()
@@ -80,14 +81,14 @@ class AWSKey:
 
     def replace_expiring_keys(self):
         for profile in self.config.sections():
-            default_verbose and logging.info(f"Found profile = {profile}")
+            self.options.verbose and logging.info(f"Found profile: {profile}")
             session = boto3.Session(profile_name=profile)
             iam = session.client('iam')
             username = self.get_iam_username(session)
             access_keys = self.get_access_keys(iam, username)
 
             for access_key in access_keys:
-                default_verbose and logging.info(f"Found access_key = {access_key['AccessKeyId']}")
+                self.options.verbose and logging.info(f"Found access_key: {access_key['AccessKeyId']}")
                 if self.key_is_expiring_soon(access_key):
                     if not self.backed_up:
                         self.backup_credentials_file()
@@ -113,8 +114,12 @@ def sigterm_handler(signum, frame):
 
 
 if __name__ == "__main__":
+    my_parser = argparse.ArgumentParser(description="Rotate AWS keys")
+    my_parser.add_argument('-v', '--verbose', action='store_true', help='Be verbose')
+    options = my_parser.parse_args()
+
     for _ in ['boto3', 'botocore']:
-        not default_verbose and logging.getLogger(_).setLevel(logging.CRITICAL)
+        not options.verbose and logging.getLogger(_).setLevel(logging.CRITICAL)
 
     for _ in [signal.SIGINT, signal.SIGTERM]:
         # noinspection PyTypeChecker
@@ -122,7 +127,7 @@ if __name__ == "__main__":
 
     try:
         logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=DEFAULT_LOG_FORMAT)
-        aws_key_manager = AWSKey()
+        aws_key_manager = AWSKey(options=options)
         aws_key_manager.replace_expiring_keys()
 
     except botocore.exceptions.ClientError as _:
