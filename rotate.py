@@ -79,8 +79,6 @@ class AWSKey:
             self.config.write(configfile)
 
     def replace_expiring_keys(self):
-        self.backed_up = False
-
         for profile in self.config.sections():
             default_verbose and logging.info(f"Found profile = {profile}")
             session = boto3.Session(profile_name=profile)
