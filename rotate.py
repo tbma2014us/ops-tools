@@ -26,6 +26,7 @@ class AWSKey:
         self.backup_file = Path(backup_file).expanduser()
         self.config = configparser.ConfigParser()
         self.config.read(self.credentials_file)
+        not self.credentials_file.exists() and logging.critical(f"{self.credentials_file} not found")
 
     @staticmethod
     def get_iam_username(session):
