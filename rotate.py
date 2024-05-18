@@ -10,35 +10,38 @@ import sys
 from datetime import datetime
 from pathlib import Path
 
-default_expiry_threshold_days = 30-7
-default_log_format = '[%(levelname)s] (%(filename)s:%(threadName)s:%(lineno)s) %(message)s'
+DEFAULT_EXPIRY_THRESHOLD_DAYS = 30-7
+DEFAULT_LOG_FORMAT = '[%(levelname)s] (%(filename)s:%(threadName)s:%(lineno)s) %(message)s'
 default_verbose = False
 
 
 class AWSKey:
     def __init__(self, expiry_threshold_days=None, credentials_file='~/.aws/credentials',
                  backup_file='~/.aws/credentials.old'):
-        self.expiry_threshold_days = expiry_threshold_days or default_expiry_threshold_days
+        self.backed_up = False
+        self.expiry_threshold_days = expiry_threshold_days or DEFAULT_EXPIRY_THRESHOLD_DAYS
         self.session = boto3.Session()
-        self.iam = self.session.client('iam')
-        self.sts = self.session.client('sts')
         self.credentials_file = Path(credentials_file).expanduser()
         self.backup_file = Path(backup_file).expanduser()
-        self.username = self.get_iam_username()
+        self.config = configparser.ConfigParser()
+        self.config.read(self.credentials_file)
 
-    def get_iam_username(self):
-        identity = self.sts.get_caller_identity()
+    @staticmethod
+    def get_iam_username(session):
+        sts = session.client('sts')
+        identity = sts.get_caller_identity()
         arn = identity['Arn']
         if arn.endswith(':root'):
             return None
         username = arn.split('/')[-1]
         return username
 
-    def get_access_keys(self):
-        if self.username:
-            response = self.iam.list_access_keys(UserName=self.username)
+    @staticmethod
+    def get_access_keys(iam, username):
+        if username:
+            response = iam.list_access_keys(UserName=username)
         else:
-            response = self.iam.list_access_keys()
+            response = iam.list_access_keys()
         return response['AccessKeyMetadata']
 
     def key_is_expiring_soon(self, access_key):
@@ -46,56 +49,62 @@ class AWSKey:
         days_elapsed = (datetime.now(create_date.tzinfo) - create_date).days
         return days_elapsed >= self.expiry_threshold_days
 
-    def create_new_access_key(self):
-        if self.username:
-            response = self.iam.create_access_key(UserName=self.username)
+    @staticmethod
+    def create_new_access_key(iam, username):
+        if username:
+            response = iam.create_access_key(UserName=username)
         else:
-            response = self.iam.create_access_key()
+            response = iam.create_access_key()
         return response['AccessKey']
 
-    def delete_access_key(self, access_key_id):
-        if self.username:
-            self.iam.delete_access_key(UserName=self.username, AccessKeyId=access_key_id)
+    @staticmethod
+    def delete_access_key(iam, username, access_key_id):
+        if username:
+            iam.delete_access_key(UserName=username, AccessKeyId=access_key_id)
         else:
-            self.iam.delete_access_key(AccessKeyId=access_key_id)
+            iam.delete_access_key(AccessKeyId=access_key_id)
 
     def backup_credentials_file(self):
         self.backup_file.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(self.credentials_file, self.backup_file)
 
-    def update_credentials_file(self, new_access_key):
-        config = configparser.ConfigParser()
-        config.read(self.credentials_file)
+    def update_credentials_file(self, profile, new_access_key):
+        if profile not in self.config:
+            self.config[profile] = {}
 
-        if 'default' not in config:
-            config['default'] = {}
-
-        config['default']['aws_access_key_id'] = new_access_key['AccessKeyId']
-        config['default']['aws_secret_access_key'] = new_access_key['SecretAccessKey']
+        self.config[profile]['aws_access_key_id'] = new_access_key['AccessKeyId']
+        self.config[profile]['aws_secret_access_key'] = new_access_key['SecretAccessKey']
 
         with open(self.credentials_file, 'w') as configfile:
-            config.write(configfile)
+            self.config.write(configfile)
 
     def replace_expiring_keys(self):
-        access_keys = self.get_access_keys()
+        self.backed_up = False
 
-        backed_up = False
-        for access_key in access_keys:
-            if self.key_is_expiring_soon(access_key):
-                if not backed_up:
-                    self.backup_credentials_file()
-                    logging.info(f"Backup of the credentials file created at {self.backup_file}")
-                    backed_up = True
-                logging.info(f"Access key {access_key['AccessKeyId']} is expiring soon.")
+        for profile in self.config.sections():
+            default_verbose and logging.info(f"Found profile = {profile}")
+            session = boto3.Session(profile_name=profile)
+            iam = session.client('iam')
+            username = self.get_iam_username(session)
+            access_keys = self.get_access_keys(iam, username)
 
-                new_access_key = self.create_new_access_key()
-                logging.info(f"Created new access key: {new_access_key['AccessKeyId']}")
+            for access_key in access_keys:
+                default_verbose and logging.info(f"Found access_key = {access_key['AccessKeyId']}")
+                if self.key_is_expiring_soon(access_key):
+                    if not self.backed_up:
+                        self.backup_credentials_file()
+                        logging.info(f"Backup of the credentials file created at {self.backup_file}")
+                        self.backed_up = True
+                    logging.info(f"Access key {access_key['AccessKeyId']} is expiring soon.")
 
-                self.update_credentials_file(new_access_key)
-                logging.info("Updated ~/.aws/credentials with new access key.")
+                    new_access_key = self.create_new_access_key(iam, username)
+                    logging.info(f"Created new access key: {new_access_key['AccessKeyId']}")
 
-                self.delete_access_key(access_key['AccessKeyId'])
-                logging.info(f"Deleted old access key: {access_key['AccessKeyId']}")
+                    self.update_credentials_file(profile, new_access_key)
+                    logging.info("Updated ~/.aws/credentials with new access key.")
+
+                    self.delete_access_key(iam, username, access_key['AccessKeyId'])
+                    logging.info(f"Deleted old access key: {access_key['AccessKeyId']}")
 
 
 # noinspection PyTypeChecker,PyUnusedLocal
@@ -114,7 +123,7 @@ if __name__ == "__main__":
         signal.signal(_, sigterm_handler)
 
     try:
-        logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=default_log_format)
+        logging.basicConfig(stream=sys.stdout, level=logging.INFO, format=DEFAULT_LOG_FORMAT)
         aws_key_manager = AWSKey()
         aws_key_manager.replace_expiring_keys()
 
