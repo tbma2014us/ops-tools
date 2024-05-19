@@ -109,8 +109,8 @@ class AWSKey:
 
 # noinspection PyTypeChecker,PyUnusedLocal
 def sigterm_handler(signum, frame):
-    sig_name = signal.Signals(signum).name
-    logging.info(f'Exiting {os.getpid()} on {sig_name}')
+    signal_name = signal.Signals(signum).name
+    logging.info(f'Exiting {os.getpid()} on {signal_name}')
     sys.exit(0)
 
 
