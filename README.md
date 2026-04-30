@@ -4,7 +4,7 @@ DevOps tools written in Python
 2. [add-tags.py](#add-tagspy)
 3. [clone.py](#clonepy)
 4. [instances-backup.py](#instances-backuppy)
-5. [fix_trusted_gpg.py] (#fix_trusted_gpgpy)
+5. [fix-trusted-gpg.py] (#fix-trusted-gpgpy)
 6. [rotate.py](#rotatepy)
 7. [start-stop.py](#start-stoppy)
 8. [wait.py](#waitpy)
@@ -23,7 +23,7 @@ Creates a running copy of the AWS computing or database instance by name or `ins
 ## instances-backup.py
 Multithreading AWS EC2 instances backup into AMIs by tag, instance id or name
 
-## fix_trusted_gpg.py 
+## fix-trusted-gpg.py 
 Fixes apt deprecated trusted.gpg key warnings like:
 ```bash
 Warning: Key is stored in legacy trusted.gpg keyring (/etc/apt/trusted.gpg), see the DEPRECATION section in apt-key(8) for details.
