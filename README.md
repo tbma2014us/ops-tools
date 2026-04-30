@@ -4,10 +4,11 @@ DevOps tools written in Python
 2. [add-tags.py](#add-tagspy)
 3. [clone.py](#clonepy)
 4. [instances-backup.py](#instances-backuppy)
-5. [rotate.py](#rotatepy)
-6. [start-stop.py](#start-stoppy)
-7. [wait.py](#waitpy)
-8. [watchdog.py](#watchdogpy)
+5. [fix_trusted_gpg.py] (#fix_trusted_gpgpy)
+6. [rotate.py](#rotatepy)
+7. [start-stop.py](#start-stoppy)
+8. [wait.py](#waitpy)
+9. [watchdog.py](#watchdogpy)
 
 
 ## cloudwatch_metrics
@@ -21,6 +22,12 @@ Creates a running copy of the AWS computing or database instance by name or `ins
 
 ## instances-backup.py
 Multithreading AWS EC2 instances backup into AMIs by tag, instance id or name
+
+## fix_trusted_gpg.py 
+Fixes apt deprecated trusted.gpg key warnings like:
+```bash
+Warning: Key is stored in legacy trusted.gpg keyring (/etc/apt/trusted.gpg), see the DEPRECATION section in apt-key(8) for details.
+```
 
 ## rotate.py
 Rotates the expiring AWS keys and writes the updated keys into the local config files.
