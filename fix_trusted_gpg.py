@@ -114,7 +114,7 @@ def fix_apt_error():
 if __name__ == "__main__":
     # Ensure the script is run as root
     if os.geteuid() != 0:
-        print("This script must be run as root. Please use 'sudo python3 your_script_name.py'")
+        print("This script must be run as root. Please use 'sudo python3 fix_trusted_gpg.py'")
     else:
         fix_apt_error()
 
